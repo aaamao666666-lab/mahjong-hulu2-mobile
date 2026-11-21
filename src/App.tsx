@@ -109,7 +109,7 @@ function TileFace({symbol}:{symbol:SymbolId}){
  }
  const startAuto=()=>{const next=!autoRef.current;autoRef.current=next;setAuto(next);if(next&&!busy.current)void spin();};
  return <main className="game-shell"><div className="game-frame">
-  <header className="top-banner"><span className="dragon dragon-left">龍</span><div><b>2000 路中奖组合</b><small>LUCKY MAHJONG · GRAND WAYS</small></div><span className="dragon dragon-right">龍</span></header>
+  <header className="top-banner"><span className="dragon dragon-left">龍</span><div><b>麻将胡了 2</b><small>2000 路中奖组合 · LUCKY MAHJONG</small></div><span className="dragon dragon-right">龍</span></header>
   <div className="multiplier">{multipliers.map((m,i)=><div className={(!spinning&&i===Math.min(combo,multipliers.length-1))|| (spinning&&i===Math.min(combo,multipliers.length-1))?"active":""} key={m}>×{m}</div>)}</div>
   {freeMode&&<div className="free-tag">免费旋转剩余：{freeSpins}</div>}
   <section className={`reels ${spinning?"spinning":""}`}>{grid.map((reel,c)=><div className={`reel ${rolling[c]?"rolling":""}`} key={c}>{reel.map((tile,r)=>{

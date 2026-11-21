@@ -98,3 +98,64 @@ footer{background:linear-gradient(180deg,#783e31,#4d2824);border-top:3px double 
 footer button{color:#f3d4ae}
 .win-panel{background:linear-gradient(145deg,#fff2c9,#eac47d);border:3px solid #ffe5a2;box-shadow:0 0 0 3px #a76636,0 0 30px #ffe28c,0 10px 28px #30161199;color:#85382e}
 @media(max-height:740px){.top-banner{height:66px}.multiplier{height:60px}.reels{max-height:49svh;min-height:265px}.tile{border-radius:9px}.controls .spin{width:70px;height:70px;min-width:70px}}
+
+
+/* Exact composition from the supplied portrait game reference */
+.game-shell{position:relative;isolation:isolate;min-height:100svh;min-height:100dvh;justify-content:center;align-items:stretch;padding:0;background:
+ radial-gradient(ellipse at 50% 42%,#e7b95d 0%,#b6c96d 45%,#79b47c 78%,#579b78 100%)}
+.game-shell:before{content:"";position:fixed;z-index:-1;inset:-22px;background:
+ radial-gradient(ellipse at 4% 20%,#d8e79a 0 9%,transparent 28%),
+ radial-gradient(ellipse at 96% 70%,#e9c56e 0 8%,transparent 28%),
+ linear-gradient(90deg,#67b98d,#b7d58c 18%,#e7c06e 50%,#b7d58c 82%,#67b98d);
+ filter:blur(18px);transform:scale(1.04)}
+.game-frame{width:min(90vw,520px);height:100svh;height:100dvh;min-height:680px;max-height:100dvh;flex:none;overflow:hidden;border:0;border-left:2px solid #e5b36a;border-right:2px solid #e5b36a;border-radius:0;background:
+ linear-gradient(180deg,#d66b50 0%,#c9674d 52%,#a94c37 100%);
+ box-shadow:0 0 0 1px #f4d092,0 0 26px #6e382c77,inset 0 0 0 1px #ffe1a0}
+.game-frame:before,.game-frame:after{top:8%;bottom:2%;width:17%;opacity:.34;font-size:clamp(50px,13vw,92px);color:#ffd28a;text-shadow:0 0 8px #ffdf9b,0 2px #963f2c}
+.game-frame:before{content:"龍";left:-3%;writing-mode:vertical-rl}
+.game-frame:after{content:"龍";right:-3%;writing-mode:vertical-rl}
+.top-banner{height:8.2%;min-height:62px;max-height:92px;flex:none;padding:0 5%;background:
+ radial-gradient(ellipse at 50% 0%,#ed9565,#d45e49 65%,#a94737);
+ border-bottom:4px solid #d8a65c;box-shadow:inset 0 -5px 0 #86382e33}
+.top-banner>div{gap:0}
+.top-banner b{font-size:clamp(19px,5.2vw,27px);font-style:italic;letter-spacing:.12em;color:#a84e3d;text-shadow:0 1px #f2b879,0 2px #7d392e}
+.top-banner small{font-size:clamp(8px,2.1vw,11px);letter-spacing:.1em;color:#f5c58a}
+.dragon{font-size:clamp(25px,7vw,36px);color:#f5cb82}
+.multiplier{height:7.1%;min-height:54px;max-height:76px;flex:none;background:linear-gradient(180deg,#65c2ac,#168879 58%,#087064);border-top:2px solid #f0ca80;border-bottom:4px solid #e0b56f}
+.multiplier>div{font-size:clamp(32px,9vw,48px);font-style:italic;font-weight:1000}
+.reels{flex:1 1 0;height:auto;min-height:0;max-height:none;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px;padding:4px 6% 5px;align-items:stretch;align-content:stretch;overflow:hidden;background:
+ linear-gradient(90deg,#e07e63 0%,#bd5146 12%,#e78d72 50%,#bd5146 88%,#e07e63 100%);
+ border-top:0;border-bottom:4px solid #d9a25b;box-shadow:inset 0 0 18px #79352e55}
+.reels:before,.reels:after{height:4px;background:linear-gradient(90deg,#9e632f,#ffe7a4,#bd813c,#ffe7a4,#9e632f)}
+.reel{height:100%;min-height:0;gap:3px;justify-content:stretch;overflow:hidden}
+.tile{flex:1 1 0;height:0;min-height:0;aspect-ratio:auto;border-radius:clamp(7px,2vw,12px);border:1.5px solid #cfc5b4;background:linear-gradient(145deg,#fffefa 0%,#f7f4eb 54%,#ddd6c8 100%);box-shadow:inset 0 2px 0 #fff,inset 0 -4px 6px #bcb3a4,0 3px 4px #713a3277;overflow:hidden}
+.tile:after{inset:3px;border:1px solid #cfc7b766;border-radius:6px}
+.tile span{font-size:clamp(15px,4.8vw,27px);line-height:1.08;font-weight:1000}
+.tile.gold{background:linear-gradient(145deg,#fff86b,#ffe31a 52%,#f1b900);border:2px solid #ffe76a;box-shadow:inset 0 0 12px #fff8,0 0 12px #ffe52c,0 2px 5px #8d5a1f99}
+.tile.gold span{color:#137b35!important;text-shadow:0 1px #fff5}
+.tile.treasure{background:linear-gradient(145deg,#fff0ff,#d7a7dc 65%,#a36bb0)}
+.notice{height:6.3%;min-height:46px;max-height:62px;flex:none;display:flex;align-items:center;justify-content:space-between;gap:5px;margin:0;padding:0 4%;border-radius:0;border:3px solid #e1b26a;border-left:0;border-right:0;background:linear-gradient(90deg,#941f32,#b42a3c 50%,#8e1d30);font-family:"Noto Sans SC",serif;font-size:clamp(13px,3.7vw,18px);font-weight:900;color:#ffe4b0;text-shadow:0 1px #6e1d28;white-space:nowrap;overflow:hidden}
+.notice-flourish{color:#f7d17d;font-size:18px;flex:none}
+.account-row{height:7.1%;min-height:48px;max-height:66px;flex:none;grid-template-columns:1.15fr .62fr 1.15fr;gap:4px;padding:5px 2%}
+.stat-pill{height:100%;min-width:0;border-radius:28px;background:linear-gradient(180deg,#74382c,#51271f);border:1px solid #a25b3d;color:#efc47a;display:flex;align-items:center;justify-content:space-evenly;gap:3px;padding:0 5px;box-shadow:inset 0 1px #f4d5a433,0 2px 4px #50241e66}
+.stat-pill svg{width:clamp(17px,4.7vw,25px);height:clamp(17px,4.7vw,25px);flex:none;stroke-width:2.2}
+.stat-pill b{font-size:clamp(12px,3.6vw,18px);font-weight:700;white-space:nowrap}
+.pg-pill{justify-content:center;gap:4px}
+.pg-pill b{font-size:clamp(13px,3.7vw,18px)}
+.controls.reference-controls{height:19%;min-height:120px;max-height:190px;flex:none;display:grid;grid-template-columns:1fr 1fr 1.45fr 1fr 1fr;align-items:center;justify-items:center;gap:3px;padding:5px 5% 12px;background:linear-gradient(180deg,#bd6248 0%,#a94c36 100%);position:relative}
+.controls.reference-controls:after{content:"";position:absolute;left:0;right:0;bottom:0;height:15px;border-bottom:3px solid #f0c879;border-radius:0 0 50% 50%;pointer-events:none}
+.controls.reference-controls>button:not(.spin){width:clamp(46px,13vw,70px);height:clamp(46px,13vw,70px);min-width:0;border-radius:50%;padding:0;background:radial-gradient(circle at 35% 25%,#814433,#4c261f 80%);border:1px solid #92553b;color:#f7e3c4;box-shadow:inset 0 2px 3px #f9d9a222,0 3px 6px #55291f66}
+.controls.reference-controls>button:not(.spin) svg{width:clamp(23px,6vw,34px);height:clamp(23px,6vw,34px);stroke-width:2.3}
+.controls.reference-controls .spin{width:clamp(104px,28vw,148px);height:clamp(104px,28vw,148px);min-width:0;border-radius:50%;padding:0;background:radial-gradient(circle at 36% 28%,#9ce0c4 0%,#45b7a2 40%,#087a70 76%,#04564f 100%);border:7px solid #e8cb77;box-shadow:0 0 0 4px #a0bd8c,0 0 0 7px #d6a456,0 0 18px #ffe18a99,0 7px 12px #56281f88;color:#ffdf83}
+.controls.reference-controls .spin svg{width:62%;height:62%;stroke-width:2.5}
+.sound-strip{height:5%;min-height:30px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 7%;background:#984832;color:#efc98c;font-size:11px}
+.sound-strip button{display:flex;align-items:center;gap:5px;border:0;background:transparent;color:inherit;font-size:11px}
+.sound-strip svg{width:15px;height:15px}
+.game-frame>footer{display:none}
+@media(max-height:740px){
+ .top-banner{height:7%;min-height:50px}.multiplier{height:6%;min-height:45px}
+ .notice{height:6%;min-height:40px}.account-row{height:7%;min-height:43px}
+ .controls.reference-controls{height:18%;min-height:105px}
+ .controls.reference-controls .spin{width:clamp(86px,25vw,118px);height:clamp(86px,25vw,118px)}
+}
+@media(min-width:600px){.game-frame{width:min(90vw,520px)}.tile span{font-size:30px}}

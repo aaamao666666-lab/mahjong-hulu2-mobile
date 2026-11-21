@@ -72,7 +72,7 @@ export default function App(){
   }
   if(accumulated===0&&awarded===0)setTip(isFree?"本次免费旋转结束":"再试一次好运");
   else if(accumulated>0)setTip(`本轮累计赢分 ¥${accumulated.toFixed(2)}`);
-  setSpinning(false);busy.current=false;
+  setRolling([false,false,false,false,false]);setSpinning(false);busy.current=false;
   if(isFree&&freeSpins===1&&awarded===0){setFreeMode(false);setTip("免费旋转结束");}
   if(auto)window.setTimeout(()=>{if(!busy.current)void spin();},700);
  }
@@ -81,7 +81,7 @@ export default function App(){
   <header className="top-banner"><span className="dragon">♢</span><div><b>麻将胡了2</b><small>2000 路中奖组合</small></div><span className="dragon">♢</span></header>
   <div className="multiplier">{multipliers.map((m,i)=><div className={(!spinning&&i===Math.min(combo,multipliers.length-1))|| (spinning&&i===Math.min(combo,multipliers.length-1))?"active":""} key={m}>×{m}</div>)}</div>
   {freeMode&&<div className="free-tag">免费旋转剩余：{freeSpins}</div>}
-  <section className={`reels ${spinning?"spinning":""}`}>{grid.map((reel,c)=><div className="reel" key={c}>{reel.map((tile,r)=>{
+  <section className={`reels ${spinning?"spinning":""}`}>{grid.map((reel,c)=><div className={`reel ${rolling[c]?"rolling":""}`} key={c}>{reel.map((tile,r)=>{
     const key=`${c}-${r}`;const isWin=highlight.has(key);
     return <div key={tile.id} className={`tile ${tile.gold?"gold":""} ${tile.symbol==="wild"?"wild":""} ${tile.symbol==="treasure"?"treasure":""} ${isWin?"winning":""}`}><span style={{color:COLORS[tile.symbol]}}>{LABELS[tile.symbol]}</span>{tile.gold&&<i>金</i>}</div>;
   })}</div>)}

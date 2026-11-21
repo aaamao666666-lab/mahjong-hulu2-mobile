@@ -1,35 +1,100 @@
-import { useMemo, useState } from "react";
-import { Volume2, VolumeX, Zap, Minus, Plus, PlayCircle, UserCircle, Shield, Coins } from "lucide-react";
+import { useRef, useState } from "react";
+import { Volume2, VolumeX, Zap, Play, Pause, RotateCcw, Plus, Minus, Sparkles } from "lucide-react";
+import {
+  type Tile, type SymbolId, type ReelGrid, PAYTABLE, NORMAL_MULTIPLIERS,
+  FREE_MULTIPLIERS, countTreasureSymbols, freeSpinsAwarded, getMultiplier,
+  isGoldEligible, evaluateWays, resolveWinningReels
+} from "./game/engine";
 
-type Tile = { face: string; kind?: "gold" | "wild" | "red" | "green" | "blue" };
-const initial: Tile[][] = [
- [{face:"🀙"},{face:"🀙"},{face:"🀙"},{face:"🀙"},{face:"🀙"}],
- [{face:"🀅"},{face:"🀄",kind:"gold"},{face:"🀆"},{face:"🀀"},{face:"🀄"}],
- [{face:"🀆"},{face:"🀅"},{face:"🀄",kind:"wild"},{face:"🀅"},{face:"🀆"}],
- [{face:"🀙"},{face:"🀄",kind:"gold"},{face:"🀅"},{face:"🀆"},{face:"🀙"}],
- [{face:"🀆"},{face:"🀙"},{face:"🀄",kind:"gold"},{face:"🀅"},{face:"🀆"}]
-];
-const symbols = ["🀄","🀅","🀆","🀙","🀚","🀛","🀜","🀝","🀞","🀟","🀠"];
+const ROWS = [4,5,5,5,4];
+const SYMBOLS: SymbolId[] = ["fa","zhong","blueFrame","wan8","fiveDots","bambooRed","threeDots","twoDots","singleDots"];
+const LABELS: Record<SymbolId,string> = {
+ fa:"發",zhong:"中",blueFrame:"白",wan8:"八萬",fiveDots:"五筒",bambooRed:"三条",
+ threeDots:"三筒",twoDots:"二筒",singleDots:"二条",wild:"百搭",treasure:"夺宝"
+};
+const COLORS: Record<SymbolId,string> = {
+ fa:"#16834a",zhong:"#c52b32",blueFrame:"#2776b9",wan8:"#292929",fiveDots:"#c52b32",
+ bambooRed:"#18834b",threeDots:"#2875b8",twoDots:"#272727",singleDots:"#16834a",wild:"#a56a12",treasure:"#8046a0"
+};
+let seq=0;
+function makeTile(reel:number):Tile {
+ const roll=Math.random();
+ const symbol:SymbolId=roll<.025?"treasure":SYMBOLS[Math.floor(Math.random()*SYMBOLS.length)];
+ return {id:String(++seq),symbol,gold:isGoldEligible(symbol,reel)&&Math.random()<.14};
+}
+function makeGrid():ReelGrid{return ROWS.map((n,c)=>Array.from({length:n},()=>makeTile(c)));}
+const wait=(ms:number)=>new Promise(resolve=>window.setTimeout(resolve,ms));
+
 export default function App(){
- const [spinning,setSpinning]=useState(false),[balance,setBalance]=useState(1000),[bet,setBet]=useState(.4),[win,setWin]=useState(0),[sound,setSound]=useState(true),[round,setRound]=useState(0);
- const [grid,setGrid]=useState<Tile[][]>(initial);
- const multiplier=round===0?1:round===1?2:round===2?3:5;
- const rows=useMemo(()=>[0,1,2,3,4],[]);
- function spin(){
-  if(spinning||balance<bet)return;
-  setSpinning(true);setBalance(v=>+(v-bet).toFixed(2));setWin(0);
-  let ticks=0;
-  const timer=window.setInterval(()=>{ticks++;setGrid(rows.map((_,c)=>Array.from({length:5},(_,r)=>({face:symbols[Math.floor(Math.random()*symbols.length)],kind:(c>0&&c<4&&Math.random()<.08?"gold":undefined) as Tile["kind"]}))));
-   if(ticks>=12){window.clearInterval(timer);setSpinning(false);setRound(v=>Math.min(v+1,3));const prize=Math.random()<.32?+(bet*(2+Math.random()*12)*multiplier).toFixed(2):0;setWin(prize);setBalance(v=>+(v+prize).toFixed(2));}
-  },110);
+ const [grid,setGrid]=useState<ReelGrid>(()=>makeGrid());
+ const [balance,setBalance]=useState(10000),[betLevel,setBetLevel]=useState(1),[win,setWin]=useState(0);
+ const [spinning,setSpinning]=useState(false),[turbo,setTurbo]=useState(false),[sound,setSound]=useState(true);
+ const [freeSpins,setFreeSpins]=useState(0),[freeMode,setFreeMode]=useState(false),[combo,setCombo]=useState(0);
+ const [highlight,setHighlight]=useState<Set<string>>(new Set()),[tip,setTip]=useState("金色牌中奖后转化为百搭");
+ const [panel,setPanel]=useState("");
+ const [auto,setAuto]=useState(false);
+ const busy=useRef(false);
+ const bet=Number((.2*betLevel).toFixed(2));
+ const multipliers=freeMode?FREE_MULTIPLIERS:NORMAL_MULTIPLIERS;
+ const multiplier=getMultiplier(freeMode,combo);
+
+ function randomize(){setGrid(makeGrid());}
+ async function spin(){
+  if(busy.current||(!freeMode&&balance<bet))return;
+  busy.current=true;setSpinning(true);setHighlight(new Set());setWin(0);setPanel("");
+  const isFree=freeMode&&freeSpins>0;
+  if(!isFree)setBalance(v=>Number((v-bet).toFixed(2)));
+  else setFreeSpins(v=>Math.max(0,v-1));
+  setCombo(0);setTip(isFree?"免费旋转中…":"好运连连…");
+  // Reel motion preview, then stop as a single round; column stagger is visual only.
+  for(let i=0;i<8;i++){randomize();await wait(turbo?55:105);}
+  let current=makeGrid();setGrid(current);
+  await wait(turbo?100:350);
+  let accumulated=0,chain=0,scatter=countTreasureSymbols(current);
+  const awarded=freeSpinsAwarded(scatter);
+  if(awarded>0){setFreeMode(true);setFreeSpins(v=>v+awarded);setTip(`夺宝触发：增加 ${awarded} 次免费旋转`);}
+  while(chain<12){
+    const result=evaluateWays(current,bet);
+    if(!result.winningPositions.size)break;
+    const mult=getMultiplier(isFree||awarded>0,chain);
+    const amount=Number((result.total*mult).toFixed(2));
+    accumulated=Number((accumulated+amount).toFixed(2));
+    setWin(accumulated);setBalance(v=>Number((v+amount).toFixed(2)));
+    setHighlight(result.winningPositions);
+    const best=[...result.wins].sort((a,b)=>b.ways-a.ways)[0];
+    setPanel(best?`${LABELS[best.symbol]}  ·  ${best.ways}路  ·  ×${mult}`:"中奖");
+    setTip(`连锁中奖 +${amount.toFixed(2)}`);
+    await wait(turbo?220:650);
+    current=resolveWinningReels(current,result.winningPositions,makeTile);
+    setGrid(current);setHighlight(new Set());setPanel("");
+    chain++;setCombo(chain);
+    await wait(turbo?80:180);
+  }
+  if(accumulated===0&&awarded===0)setTip(isFree?"本次免费旋转结束":"再试一次好运");
+  else if(accumulated>0)setTip(`本轮累计赢分 ¥${accumulated.toFixed(2)}`);
+  setSpinning(false);busy.current=false;
+  if(isFree&&freeSpins===1&&awarded===0){setFreeMode(false);setTip("免费旋转结束");}
+  if(auto)window.setTimeout(()=>{if(!busy.current)void spin();},700);
  }
+ const startAuto=()=>setAuto(v=>!v);
  return <main className="game-shell"><div className="game-frame">
-  <header className="top-banner"><div className="dragon dragon-left">♢</div><span>✦ 2000 路中奖组合 ✦</span><div className="dragon dragon-right">♢</div></header>
-  <section className="multiplier">{[1,2,3,5].map((n,i)=><div className={multiplier===n?"active":""} key={n}>x{n}</div>)}</section>
-  <section className="reels" aria-label="麻将牌阵">{grid.map((col,c)=><div className={`reel ${spinning?"moving":""}`} key={c}>{col.map((tile,r)=><div className={`tile ${tile.kind||""}`} key={r}><span>{tile.face}</span></div>)}</div>)}</section>
-  <div className="notice">{win>0?`恭喜中奖 ¥${win.toFixed(2)}！`:"保证出现的金色麻将符号！"}</div>
-  <section className="account-row"><div><UserCircle/><b>¥{balance.toFixed(2)}</b></div><div className="pg"><Shield/><b>PG</b></div><div><b>¥{bet.toFixed(2)}</b><Coins/></div></section>
-  <section className="controls"><button aria-label="加速" onClick={()=>setSound(v=>!v)}><Zap/></button><button aria-label="减注" onClick={()=>setBet(v=>Math.max(.2,+(v-.2).toFixed(2)))}><Minus/></button><button className={`spin ${spinning?"busy":""}`} onClick={spin} disabled={spinning}><span>⟳</span></button><button aria-label="加注" onClick={()=>setBet(v=>+(v+.2).toFixed(2))}><Plus/></button><button aria-label="自动旋转" onClick={spin}><PlayCircle/></button></section>
-  <footer><button onClick={()=>setSound(v=>!v)}>{sound?<Volume2/>:<VolumeX/>}声音</button><button onClick={()=>alert("赔付表：正式赔付数值待接入原始规则数据")}>∿ 赔付表</button><button onClick={()=>alert("规则以你提供的规则图为准")}>ⓘ 规则</button><button onClick={()=>alert("历史记录将在下一阶段接入")}>◷ 历史</button><button onClick={()=>alert("退出游戏")}>↩ 退出</button></footer>
- </div></main>
+  <header className="top-banner"><span className="dragon">♢</span><div><b>麻将胡了2</b><small>2000 路中奖组合</small></div><span className="dragon">♢</span></header>
+  <div className="multiplier">{multipliers.map((m,i)=><div className={(!spinning&&i===Math.min(combo,multipliers.length-1))|| (spinning&&i===Math.min(combo,multipliers.length-1))?"active":""} key={m}>×{m}</div>)}</div>
+  {freeMode&&<div className="free-tag">免费旋转剩余：{freeSpins}</div>}
+  <section className={`reels ${spinning?"spinning":""}`}>{grid.map((reel,c)=><div className="reel" key={c}>{reel.map((tile,r)=>{
+    const key=`${c}-${r}`;const isWin=highlight.has(key);
+    return <div key={tile.id} className={`tile ${tile.gold?"gold":""} ${tile.symbol==="wild"?"wild":""} ${tile.symbol==="treasure"?"treasure":""} ${isWin?"winning":""}`}><span style={{color:COLORS[tile.symbol]}}>{LABELS[tile.symbol]}</span>{tile.gold&&<i>金</i>}</div>;
+  })}</div>)}
+  {panel&&<div className="win-panel">{panel}<strong>¥{win.toFixed(2)}</strong></div>}</section>
+  <div className="notice">{tip}</div>
+  <section className="account-row"><div><small>余额</small><b>¥{balance.toFixed(2)}</b></div><div><small>本轮赢分</small><b>¥{win.toFixed(2)}</b></div><div><small>投注</small><b>¥{bet.toFixed(2)}</b></div></section>
+  <section className="controls">
+   <button onClick={()=>setTurbo(v=>!v)} className={turbo?"selected":""}><Zap/>加速</button>
+   <div className="bet-control"><button disabled={spinning||freeMode} onClick={()=>setBetLevel(v=>Math.max(1,v-1))}><Minus/></button><span>{betLevel}倍</span><button disabled={spinning||freeMode} onClick={()=>setBetLevel(v=>Math.min(20,v+1))}><Plus/></button></div>
+   <button className="spin" disabled={spinning} onClick={()=>void spin()}><RotateCcw/></button>
+   <button onClick={startAuto} className={auto?"selected":""}>{auto?<Pause/>:<Play/>}自动</button>
+   <button onClick={()=>setSound(v=>!v)}>{sound?<Volume2/>:<VolumeX/>}声音</button>
+  </section>
+  <footer><button onClick={()=>setPanel("赔付表已按规则图录入")}>赔付表</button><button onClick={()=>setPanel("3个夺宝符号触发10次免费旋转，每多1个增加2次")}>游戏规则</button><button onClick={()=>setPanel("中奖组合按从左至右连续3至5列计算")}>中奖说明</button></footer>
+ </div></main>;
 }

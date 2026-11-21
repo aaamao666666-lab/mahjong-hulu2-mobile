@@ -25,7 +25,24 @@ function makeTile(reel:number):Tile {
 function makeGrid():ReelGrid{return ROWS.map((n,c)=>Array.from({length:n},()=>makeTile(c)));}
 const wait=(ms:number)=>new Promise(resolve=>window.setTimeout(resolve,ms));
 
-export default function App(){
+
+function TileFace({symbol}:{symbol:SymbolId}){
+ const dotSets:Record<string,Array<[number,number,string]>>={
+  fiveDots:[[28,28,"#248b52"],[72,28,"#6652ad"],[50,50,"#c33b39"],[28,72,"#248b52"],[72,72,"#6652ad"]],
+  threeDots:[[50,25,"#6652ad"],[50,50,"#c33b39"],[50,75,"#248b52"]],
+  twoDots:[[50,30,"#6652ad"],[50,70,"#248b52"]],
+  singleDots:[[50,50,"#248b52"]]
+ };
+ if(dotSets[symbol]) return <svg className="tile-art dots-art" viewBox="0 0 100 100" aria-hidden="true">{dotSets[symbol].map(([x,y,color],i)=><g key={i}><circle cx={x} cy={y} r="12" fill={color}/><circle cx={x-3} cy={y-3} r="3" fill="#ffffff99"/></g>)}</svg>;
+ if(symbol==="bambooRed") return <svg className="tile-art bamboo-art" viewBox="0 0 100 100" aria-hidden="true">{[27,50,73].map((x,i)=><g key={x}><rect x={x-5} y="17" width="10" height="66" rx="5" fill={i===1?"#c33b35":"#21844c"}/><path d={`M${x-5} 34h10 M${x-5} 55h10 M${x-5} 75h10`} stroke="#f4e8ce" strokeWidth="3"/><path d={`M${x} 17q-13 -12 -14 -2q8 8 14 2 M${x} 17q13 -12 14 -2q-8 8 -14 2`} fill="#27864d"/></g>)}</svg>;
+ if(symbol==="blueFrame") return <svg className="tile-art frame-art" viewBox="0 0 100 100" aria-hidden="true"><rect x="17" y="13" width="66" height="74" rx="5" fill="none" stroke="#5143a0" strokeWidth="7"/><rect x="27" y="23" width="46" height="54" rx="2" fill="none" stroke="#5143a0" strokeWidth="3"/><path d="M28 31q9 0 9-8 M72 31q-9 0-9-8 M28 69q9 0 9 8 M72 69q-9 0-9 8" fill="none" stroke="#5143a0" strokeWidth="3"/></svg>;
+ if(symbol==="wan8") return <span className="tile-word wan-word"><i>八</i><i>萬</i></span>;
+ if(symbol==="fa"||symbol==="zhong") return <span className={`tile-word honor-word ${symbol}`}>{LABELS[symbol]}</span>;
+ if(symbol==="treasure") return <span className="tile-word treasure-word">夺宝</span>;
+ if(symbol==="wild") return <span className="tile-word wild-word">百搭</span>;
+ return <span className="tile-word">{LABELS[symbol]}</span>;
+}
+\nexport default function App(){
  const [grid,setGrid]=useState<ReelGrid>(()=>makeGrid());
  const [balance,setBalance]=useState(10000),[betLevel,setBetLevel]=useState(1),[win,setWin]=useState(0);
  const [spinning,setSpinning]=useState(false),[turbo,setTurbo]=useState(false),[sound,setSound]=useState(true);
@@ -97,7 +114,7 @@ export default function App(){
   {freeMode&&<div className="free-tag">免费旋转剩余：{freeSpins}</div>}
   <section className={`reels ${spinning?"spinning":""}`}>{grid.map((reel,c)=><div className={`reel ${rolling[c]?"rolling":""}`} key={c}>{reel.map((tile,r)=>{
     const key=`${c}-${r}`;const isWin=highlight.has(key);
-    return <div key={tile.id} className={`tile ${tile.gold?"gold":""} ${tile.symbol==="wild"?"wild":""} ${tile.symbol==="treasure"?"treasure":""} ${isWin?"winning":""}`}><span style={{color:COLORS[tile.symbol]}}>{LABELS[tile.symbol]}</span>{tile.gold&&<i>金</i>}</div>;
+    return <div key={tile.id} className={`tile ${tile.gold?"gold":""} ${tile.symbol==="wild"?"wild":""} ${tile.symbol==="treasure"?"treasure":""} ${isWin?"winning":""}`}><TileFace symbol={tile.symbol}/>{tile.gold&&<i>金</i>}</div>;
   })}</div>)}
   {panel&&<div className="win-panel">{panel}<strong>¥{win.toFixed(2)}</strong></div>}</section>
   <div className="notice"><span className="notice-flourish">❖</span>{spinning?tip:"保证出现的金色麻将符号！"}<span className="notice-flourish">❖</span></div>

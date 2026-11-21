@@ -34,7 +34,8 @@ export default function App(){
  const [highlight,setHighlight]=useState<Set<string>>(new Set()),[tip,setTip]=useState("金色牌中奖后转化为百搭");
  const [panel,setPanel]=useState("");
  const [auto,setAuto]=useState(false);
- const busy=useRef(false);\n const autoRef=useRef(false);
+ const busy=useRef(false);
+ const autoRef=useRef(false);
  const bet=Number((.2*betLevel).toFixed(2));
  const multipliers=freeMode?FREE_MULTIPLIERS:NORMAL_MULTIPLIERS;
  const multiplier=getMultiplier(freeMode,combo);

@@ -59,3 +59,53 @@ button:focus-visible{outline:2px solid #d7c59f;outline-offset:2px}
 .controls .selected{background:linear-gradient(180deg,#899b8e,#687e72);border-color:#a9b5a6}
 .controls .spin{background:radial-gradient(circle at 35% 25%,#c5cec1,#92a394 52%,#687f71 82%);border-color:#aa9c80;box-shadow:0 0 0 3px #7e9081,0 5px 10px #403a3455}
 footer{background:linear-gradient(180deg,#62574f,#4e4741);border-top-color:#84776a;color:#e0d8cc}
+
+/* Reference-layout lock: preserve the supplied 5-reel geometry and tile proportions */
+.game-shell{min-height:100svh;min-height:100dvh;align-items:stretch;overflow:hidden}
+.game-frame{
+ width:min(100%,520px);
+ min-height:100svh;min-height:100dvh;
+ height:100svh;height:100dvh;
+ aspect-ratio:unset;
+ margin:0 auto;
+ display:flex;
+}
+.reels{
+ flex:1 1 0;
+ min-height:0;
+ max-height:none;
+ grid-template-columns:repeat(5,minmax(0,1fr));
+ gap:clamp(3px,1vw,7px);
+ padding:clamp(7px,2vw,12px) 4%;
+ align-items:stretch;
+ align-content:stretch;
+}
+.reel{height:100%;min-height:0;gap:clamp(3px,.8vw,6px);justify-content:space-between}
+.tile{
+ flex:1 1 0;
+ min-height:0;
+ height:auto;
+ aspect-ratio:unset;
+ width:100%;
+ border-radius:clamp(7px,2vw,12px);
+}
+.tile-art{width:78%;height:78%;object-fit:contain}
+.tile span{line-height:1.02}
+.top-banner{flex-basis:10.5%;height:auto;min-height:62px}
+.multiplier{flex-basis:8%;height:auto;min-height:48px}
+.notice{flex:none}
+.account-row{flex:none}
+.controls{flex:none}
+footer{flex:none}
+@media(max-height:740px){
+ .top-banner{height:auto;min-height:54px;flex-basis:9%}
+ .multiplier{height:auto;min-height:43px;flex-basis:7%}
+ .reels{min-height:0;max-height:none}
+ .tile{border-radius:7px}
+}
+@media(min-width:600px){
+ .game-frame{min-height:800px;height:min(100dvh,960px)}
+ .reels{max-height:none}
+}
+/* The tile itself is never stretched: each reel distributes equal-height slots */
+.reel .tile{width:100%;flex:1 1 0}

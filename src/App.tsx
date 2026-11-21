@@ -99,15 +99,20 @@ export default function App(){
     return <div key={tile.id} className={`tile ${tile.gold?"gold":""} ${tile.symbol==="wild"?"wild":""} ${tile.symbol==="treasure"?"treasure":""} ${isWin?"winning":""}`}><span style={{color:COLORS[tile.symbol]}}>{LABELS[tile.symbol]}</span>{tile.gold&&<i>金</i>}</div>;
   })}</div>)}
   {panel&&<div className="win-panel">{panel}<strong>¥{win.toFixed(2)}</strong></div>}</section>
-  <div className="notice">{tip}</div>
-  <section className="account-row"><div><small>余额</small><b>¥{balance.toFixed(2)}</b></div><div><small>本轮赢分</small><b>¥{win.toFixed(2)}</b></div><div><small>投注</small><b>¥{bet.toFixed(2)}</b></div></section>
-  <section className="controls">
-   <button onClick={()=>setTurbo(v=>!v)} className={turbo?"selected":""}><Zap/>加速</button>
-   <div className="bet-control"><button disabled={spinning||freeMode} onClick={()=>setBetLevel(v=>Math.max(1,v-1))}><Minus/></button><span>{betLevel}倍</span><button disabled={spinning||freeMode} onClick={()=>setBetLevel(v=>Math.min(20,v+1))}><Plus/></button></div>
-   <button className="spin" disabled={spinning} onClick={()=>void spin()}><RotateCcw/></button>
-   <button onClick={startAuto} className={auto?"selected":""}>{auto?<Pause/>:<Play/>}自动</button>
-   <button onClick={()=>setSound(v=>!v)}>{sound?<Volume2/>:<VolumeX/>}声音</button>
+  <div className="notice"><span className="notice-flourish">❖</span>{spinning?tip:"保证出现的金色麻将符号！"}<span className="notice-flourish">❖</span></div>
+  <section className="account-row">
+   <div className="stat-pill"><UserRound/><b>¥{balance.toFixed(2)}</b></div>
+   <div className="stat-pill pg-pill"><ShieldCheck/><b>PG</b></div>
+   <div className="stat-pill"><b>¥{bet.toFixed(2)}</b><CircleDollarSign/></div>
   </section>
+  <section className="controls reference-controls">
+   <button aria-label="加速" onClick={()=>setTurbo(v=>!v)} className={turbo?"selected":""}><Zap/></button>
+   <button aria-label="减少投注" disabled={spinning||freeMode} onClick={()=>setBetLevel(v=>Math.max(1,v-1))}><Minus/></button>
+   <button className="spin" aria-label="旋转" disabled={spinning} onClick={()=>void spin()}><RotateCcw/></button>
+   <button aria-label="增加投注" disabled={spinning||freeMode} onClick={()=>setBetLevel(v=>Math.min(20,v+1))}><Plus/></button>
+   <button aria-label="自动旋转" onClick={startAuto} className={auto?"selected":""}>{auto?<Pause/>:<Play/>}</button>
+  </section>
+  <div className="sound-strip"><button onClick={()=>setSound(v=>!v)}>{sound?<Volume2/>:<VolumeX/>} {sound?"声音开启":"声音关闭"}</button><span>本轮赢分 ¥{win.toFixed(2)}</span></div>
   <footer><button onClick={()=>setPanel("赔付表已按规则图录入")}>赔付表</button><button onClick={()=>setPanel("3个夺宝符号触发10次免费旋转，每多1个增加2次")}>游戏规则</button><button onClick={()=>setPanel("中奖组合按从左至右连续3至5列计算")}>中奖说明</button></footer>
  </div></main>;
 }

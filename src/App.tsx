@@ -29,6 +29,7 @@ export default function App(){
  const [grid,setGrid]=useState<ReelGrid>(()=>makeGrid());
  const [balance,setBalance]=useState(10000),[betLevel,setBetLevel]=useState(1),[win,setWin]=useState(0);
  const [spinning,setSpinning]=useState(false),[turbo,setTurbo]=useState(false),[sound,setSound]=useState(true);
+ const [rolling,setRolling]=useState<boolean[]>([false,false,false,false,false]);
  const [freeSpins,setFreeSpins]=useState(0),[freeMode,setFreeMode]=useState(false),[combo,setCombo]=useState(0);
  const [highlight,setHighlight]=useState<Set<string>>(new Set()),[tip,setTip]=useState("金色牌中奖后转化为百搭");
  const [panel,setPanel]=useState("");
@@ -38,7 +39,6 @@ export default function App(){
  const multipliers=freeMode?FREE_MULTIPLIERS:NORMAL_MULTIPLIERS;
  const multiplier=getMultiplier(freeMode,combo);
 
- function randomize(){setGrid(makeGrid());}
  async function spin(){
   if(busy.current||(!freeMode&&balance<bet))return;
   busy.current=true;setSpinning(true);setHighlight(new Set());setWin(0);setPanel("");
@@ -46,10 +46,23 @@ export default function App(){
   if(!isFree)setBalance(v=>Number((v-bet).toFixed(2)));
   else setFreeSpins(v=>Math.max(0,v-1));
   setCombo(0);setTip(isFree?"免费旋转中…":"好运连连…");
-  // Reel motion preview, then stop as a single round; column stagger is visual only.
-  for(let i=0;i<8;i++){randomize();await wait(turbo?55:105);}
-  let current=makeGrid();setGrid(current);
-  await wait(turbo?100:350);
+  // Spin each reel independently and stop them from left to right.
+  const finalGrid=makeGrid();
+  const timers:number[]=[];
+  setRolling([true,true,true,true,true]);
+  ROWS.forEach((count,reelIndex)=>{
+    timers[reelIndex]=window.setInterval(()=>{
+      setGrid(previous=>previous.map((reel,index)=>index===reelIndex?Array.from({length:count},()=>makeTile(reelIndex)):reel));
+    },turbo?55:78);
+  });
+  for(let reelIndex=0;reelIndex<5;reelIndex++){
+    await wait((turbo?260:520)+(turbo?90:180)*reelIndex);
+    window.clearInterval(timers[reelIndex]);
+    setGrid(previous=>previous.map((reel,index)=>index===reelIndex?finalGrid[reelIndex]:reel));
+    setRolling(previous=>previous.map((value,index)=>index===reelIndex?false:value));
+  }
+  let current=finalGrid;
+  await wait(turbo?100:280);
   let accumulated=0,chain=0,scatter=countTreasureSymbols(current);
   const awarded=freeSpinsAwarded(scatter);
   if(awarded>0){setFreeMode(true);setFreeSpins(v=>v+awarded);setTip(`夺宝触发：增加 ${awarded} 次免费旋转`);}

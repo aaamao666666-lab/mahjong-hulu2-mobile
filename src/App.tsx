@@ -42,7 +42,8 @@ function TileFace({symbol}:{symbol:SymbolId}){
  if(symbol==="wild") return <span className="tile-word wild-word">百搭</span>;
  return <span className="tile-word">{LABELS[symbol]}</span>;
 }
-\nexport default function App(){
+
+export default function App(){
  const [grid,setGrid]=useState<ReelGrid>(()=>makeGrid());
  const [balance,setBalance]=useState(10000),[betLevel,setBetLevel]=useState(1),[win,setWin]=useState(0);
  const [spinning,setSpinning]=useState(false),[turbo,setTurbo]=useState(false),[sound,setSound]=useState(true);

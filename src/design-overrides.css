@@ -1,0 +1,40 @@
+/* Low-saturation porcelain & celadon art direction */
+:root{
+ --mh-ivory:#F3EEE5; --mh-cream:#E7DED1; --mh-clay:#A98270;
+ --mh-clay-dark:#806456; --mh-cocoa:#51443D; --mh-cocoa-deep:#3F3530;
+ --mh-bronze:#A88F70; --mh-champagne:#C5B293;
+ --mh-celadon:#8FA69A; --mh-celadon-deep:#647F73;
+ --mh-sage:#A8B5A1; --mh-ink:#51463F; --mh-soft-gold:#CDB985;
+}
+:root{color:#f3eee5;background:#e7ded1}
+.game-shell{background:radial-gradient(ellipse at 50% 28%,#f0e9df 0%,#d8cbbd 72%,#c8b8a8 100%)}
+.game-frame,.game-frame{background:linear-gradient(180deg,#79665b 0%,#66544b 48%,#51443d 100%);border-color:#a88f70;box-shadow:inset 0 0 0 2px #c5b293,inset 0 0 28px #30272055,0 10px 30px #40332b44}
+.game-frame:before,.game-frame:after{opacity:.48}
+.top-banner{background:linear-gradient(180deg,#9c7868 0%,#806456 100%);border-bottom-color:#a88f70;box-shadow:inset 0 -4px 0 #44372e22}
+.top-banner b{color:#f1e8dc;text-shadow:0 1px 2px #45352e66}
+.top-banner small{color:#dfd1bc}
+.dragon-art{opacity:.72;filter:saturate(.55)}
+.multiplier{background:linear-gradient(180deg,#a8b9ac 0%,#829b8d 54%,#6e897b 100%);border-color:#b5a181;box-shadow:inset 0 4px 9px #ffffff30,inset 0 -4px 9px #344c4133}
+.multiplier>div{color:#405b4e;text-shadow:0 1px 1px #e7eee6aa}
+.multiplier>div.active{color:#f5edda;text-shadow:0 0 8px #f1e5c5aa,0 1px 2px #405348}
+.free-tag{background:#66564b;color:#eee3d2;border-color:#a88f70}
+.reels{background:linear-gradient(90deg,#776257 0%,#927767 17%,#887061 50%,#927767 83%,#776257 100%);border-bottom-color:#a88f70;box-shadow:inset 0 8px 14px #40332b33,inset 0 -8px 14px #40332b33}
+.reels:before,.reels:after{background:linear-gradient(90deg,#8f795e,#c5b293,#8f795e)}
+.tile{background:linear-gradient(145deg,#fffdf8 0%,#f3eee5 58%,#e4dbcf 100%);border-color:#c9bfae;box-shadow:inset 0 2px 5px #fff, inset 0 -3px 6px #c7bda9,0 3px 5px #43362e44}
+.tile.gold{background:linear-gradient(145deg,#f4edda,#d8c69a 58%,#bda577);border:2px solid #cdb985;box-shadow:inset 0 0 10px #fff8,0 0 9px #cdb98566}
+.tile.wild{background:linear-gradient(145deg,#eee3c9,#c7ae79);border:2px solid #cdb985}
+.tile.treasure{background:linear-gradient(145deg,#eee7e8,#c9b5c7 58%,#aa91a8);border:2px solid #c9b5c7;box-shadow:inset 0 0 10px #fff8,0 0 8px #aa91a866}
+.tile.winning{outline:2px solid #d4c397;box-shadow:0 0 14px #d4c39799,0 0 5px #fff}
+@keyframes winPulse{to{filter:brightness(1.07);transform:scale(1.045)}}
+.notice{color:#f1e9dc;background:linear-gradient(90deg,#766055,#8c7060,#766055);border-color:#ad9676;box-shadow:0 3px 7px #3d302966,inset 0 1px #ffffff22}
+.notice-flourish{color:#d1c09b}
+.account-row>div{background:linear-gradient(180deg,#746055,#57483f);color:#e4d5bb;box-shadow:inset 0 1px 2px #ffffff20,0 2px 3px #40332b33}
+.account-row small{color:#d4c4ae}
+.controls button{border-color:#927967;background:linear-gradient(180deg,#796458,#594940);color:#eee5d8;box-shadow:inset 0 1px 2px #ffffff22,0 2px 4px #40332b55}
+.controls .selected{background:linear-gradient(180deg,#8fa69a,#647f73);color:#f5f0e6;border-color:#b3c0b2}
+.controls .spin{background:radial-gradient(circle at 35% 25%,#c0cec0,#8fa69a 52%,#5d796d 82%);border-color:#b9a782;box-shadow:0 0 0 3px #758d7e,0 5px 10px #40332b55;color:#f5efe2}
+footer{background:linear-gradient(180deg,#5e4b42,#493b35);border-top-color:#8f7967;color:#e1d4c4}
+.win-panel{border-color:#bda77e;background:linear-gradient(145deg,#f2ead9,#dfd0b1);color:#665248;box-shadow:0 8px 24px #2a211d77,inset 0 0 0 2px #fff9}
+.win-panel strong{color:#77604e;text-shadow:none}
+button:focus-visible{outline:2px solid #d7c59f;outline-offset:2px}
+@media(prefers-reduced-motion:reduce){.tile.winning{animation:none}}

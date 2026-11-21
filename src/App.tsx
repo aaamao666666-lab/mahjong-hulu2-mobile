@@ -34,7 +34,7 @@ export default function App(){
  const [highlight,setHighlight]=useState<Set<string>>(new Set()),[tip,setTip]=useState("金色牌中奖后转化为百搭");
  const [panel,setPanel]=useState("");
  const [auto,setAuto]=useState(false);
- const busy=useRef(false);
+ const busy=useRef(false);\n const autoRef=useRef(false);
  const bet=Number((.2*betLevel).toFixed(2));
  const multipliers=freeMode?FREE_MULTIPLIERS:NORMAL_MULTIPLIERS;
  const multiplier=getMultiplier(freeMode,combo);
@@ -87,9 +87,9 @@ export default function App(){
   else if(accumulated>0)setTip(`本轮累计赢分 ¥${accumulated.toFixed(2)}`);
   setRolling([false,false,false,false,false]);setSpinning(false);busy.current=false;
   if(isFree&&freeSpins===1&&awarded===0){setFreeMode(false);setTip("免费旋转结束");}
-  if(auto)window.setTimeout(()=>{if(!busy.current)void spin();},700);
+  if(autoRef.current)window.setTimeout(()=>{if(autoRef.current&&!busy.current)void spin();},700);
  }
- const startAuto=()=>setAuto(v=>!v);
+ const startAuto=()=>{const next=!autoRef.current;autoRef.current=next;setAuto(next);if(next&&!busy.current)void spin();};
  return <main className="game-shell"><div className="game-frame">
   <header className="top-banner"><span className="dragon">♢</span><div><b>麻将胡了2</b><small>2000 路中奖组合</small></div><span className="dragon">♢</span></header>
   <div className="multiplier">{multipliers.map((m,i)=><div className={(!spinning&&i===Math.min(combo,multipliers.length-1))|| (spinning&&i===Math.min(combo,multipliers.length-1))?"active":""} key={m}>×{m}</div>)}</div>

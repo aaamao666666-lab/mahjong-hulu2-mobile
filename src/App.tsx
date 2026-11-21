@@ -43,6 +43,20 @@ function TileFace({symbol}:{symbol:SymbolId}){
  return <span className="tile-word">{LABELS[symbol]}</span>;
 }
 
+function DragonArt({side}:{side:"left"|"right"}){
+ return <svg className={`dragon-art ${side}`} viewBox="0 0 150 90" aria-hidden="true">
+  <defs><linearGradient id={`dragon-gold-${side}`} x1="0" y1="0" x2="1" y2="1"><stop stopColor="#fff0b2"/><stop offset=".45" stopColor="#e7b45e"/><stop offset="1" stopColor="#a65b35"/></linearGradient></defs>
+  <g fill="none" stroke={`url(#dragon-gold-${side})`} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+   <path d="M8 78 Q34 54 38 31 Q43 8 63 15 Q80 20 75 37 Q70 51 53 48 Q42 45 47 34 Q53 24 62 31"/>
+   <path d="M61 15 Q52 2 40 7 L47 20 M66 16 Q78 2 91 8 L79 22 M73 29 Q93 19 106 29 L91 35"/>
+   <path d="M53 48 Q77 58 96 44 Q115 31 139 13 M67 54 Q91 68 116 51 L143 34"/>
+   <path d="M92 43 l9 12 -4 13 M112 33 l13 7 3 13 M37 31 l-14 -8 -8 7"/>
+   <path d="M18 78 Q44 68 63 78 Q91 91 121 72" strokeWidth="2"/>
+   <circle cx="64" cy="30" r="2.5" fill="#fff0b2" stroke="none"/>
+  </g>
+ </svg>;
+}
+
 export default function App(){
  const [grid,setGrid]=useState<ReelGrid>(()=>makeGrid());
  const [balance,setBalance]=useState(10000),[betLevel,setBetLevel]=useState(1),[win,setWin]=useState(0);
@@ -110,7 +124,7 @@ export default function App(){
  }
  const startAuto=()=>{const next=!autoRef.current;autoRef.current=next;setAuto(next);if(next&&!busy.current)void spin();};
  return <main className="game-shell"><div className="game-frame">
-  <header className="top-banner"><span className="dragon dragon-left">龍</span><div><b>麻将胡了 2</b><small>2000 路中奖组合 · LUCKY MAHJONG</small></div><span className="dragon dragon-right">龍</span></header>
+  <header className="top-banner"><DragonArt side="left"/><div><b>麻将胡了 2</b><small>2000 路中奖组合 · LUCKY MAHJONG</small></div><DragonArt side="right"/></header>
   <div className="multiplier">{multipliers.map((m,i)=><div className={(!spinning&&i===Math.min(combo,multipliers.length-1))|| (spinning&&i===Math.min(combo,multipliers.length-1))?"active":""} key={m}>×{m}</div>)}</div>
   {freeMode&&<div className="free-tag">免费旋转剩余：{freeSpins}</div>}
   <section className={`reels ${spinning?"spinning":""}`}>{grid.map((reel,c)=><div className={`reel ${rolling[c]?"rolling":""}`} key={c}>{reel.map((tile,r)=>{

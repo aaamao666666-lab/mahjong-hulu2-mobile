@@ -8,6 +8,7 @@ import {
 } from "./game/engine";
 
 const ROWS = [4,5,5,5,4];
+const NORMAL_EDITION = new URLSearchParams(window.location.search).get("edition") === "normal";
 const SYMBOLS: SymbolId[] = ["fa","zhong","blueFrame","wan8","fiveDots","bambooRed","threeDots","twoDots","singleDots"];
 const LABELS: Record<SymbolId,string> = {
  fa:"發",zhong:"中",blueFrame:"白",wan8:"八萬",fiveDots:"五筒",bambooRed:"三条",

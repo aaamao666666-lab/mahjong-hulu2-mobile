@@ -22,15 +22,15 @@ jobs:
           name: mahjong-hulu2-mobile-dist
           path: dist/
           if-no-files-found: error
-      - name: Deploy to Cloudflare Pages
-        if: ${{ vars.CLOUDFLARE_ACCOUNT_ID != '' }}
+      - name: Deploy to Cloudflare Workers
+        if: ${{ vars.CLOUDFLARE_ACCOUNT_ID != '' && secrets.CLOUDFLARE_API_TOKEN != '' }}
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=mahjong-hulu2-mobile
+          command: deploy
       - name: Deployment setup required
-        if: ${{ vars.CLOUDFLARE_ACCOUNT_ID == '' }}
+        if: ${{ vars.CLOUDFLARE_ACCOUNT_ID == '' || secrets.CLOUDFLARE_API_TOKEN == '' }}
         run: |
-          echo "Build succeeded. Cloudflare Pages deployment is not configured yet."
+          echo "Build succeeded. Cloudflare Workers deployment is waiting for repository credentials."
           echo "Add repository variable CLOUDFLARE_ACCOUNT_ID and secret CLOUDFLARE_API_TOKEN."

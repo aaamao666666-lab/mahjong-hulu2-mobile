@@ -1,10 +1,11 @@
-name: Build mobile game
+name: Build and deploy mobile game
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,5 +16,21 @@ jobs:
           node-version: 22
       - run: npm install
       - run: npm run build
-      - name: Validate Cloudflare Worker bundle
-        run: npx wrangler deploy --dry-run
+      - name: Upload website build
+        uses: actions/upload-artifact@v4
+        with:
+          name: mahjong-hulu2-mobile-dist
+          path: dist/
+          if-no-files-found: error
+      - name: Deploy to Cloudflare Pages
+        if: ${{ vars.CLOUDFLARE_ACCOUNT_ID != '' }}
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=mahjong-hulu2-mobile
+      - name: Deployment setup required
+        if: ${{ vars.CLOUDFLARE_ACCOUNT_ID == '' }}
+        run: |
+          echo "Build succeeded. Cloudflare Pages deployment is not configured yet."
+          echo "Add repository variable CLOUDFLARE_ACCOUNT_ID and secret CLOUDFLARE_API_TOKEN."

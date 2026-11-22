@@ -4,4 +4,11 @@ import App from "./App";
 import "./index.css";
 import "./normal-edition.css";
 
-createRoot(document.getElementById("root")!).render(<React.StrictMode><App /></React.StrictMode>);
+const isNormalEdition = new URLSearchParams(window.location.search).get("edition") === "normal";
+createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <div className={isNormalEdition ? "normal-edition" : ""}>
+      <App />
+    </div>
+  </React.StrictMode>
+);

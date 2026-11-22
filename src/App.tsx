@@ -126,7 +126,7 @@ export default function App(){
  }
  const startAuto=()=>{const next=!autoRef.current;autoRef.current=next;setAuto(next);if(next&&!busy.current)void spin();};
  return <main className="game-shell"><div className="game-frame">
-  <header className="top-banner"><DragonArt side="left"/><div><b>麻将胡了 2</b><small>2000 路中奖组合 · LUCKY MAHJONG</small></div><DragonArt side="right"/></header>
+  <header className="top-banner"><div className="top-banner-caption"><small>2000 路中奖组合</small></div></header>
   <div className="multiplier">{multipliers.map((m,i)=><div className={(!spinning&&i===Math.min(combo,multipliers.length-1))|| (spinning&&i===Math.min(combo,multipliers.length-1))?"active":""} key={m}>×{m}</div>)}</div>
   {freeMode&&<div className="free-tag">免费旋转剩余：{freeSpins}</div>}
   <section className={`reels ${spinning?"spinning":""}`}>{grid.map((reel,c)=><div className={`reel ${rolling[c]?"rolling":""}`} key={c}>{reel.map((tile,r)=>{

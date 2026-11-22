@@ -21,3 +21,12 @@
 .normal-edition .controls .spin{background:radial-gradient(circle at 35% 25%,#a9e0ca,#53b39e 52%,#147c70 78%)!important;border:6px solid #d8b96e!important;box-shadow:0 0 0 3px #7ca58b,0 6px 10px #53372e66!important}
 .normal-edition footer{background:linear-gradient(180deg,#a75a42,#783d30)!important;border-top:2px solid #d2a168!important;color:#f5dfc4!important}
 @media(max-height:740px){.normal-edition .reels{min-height:0!important}.normal-edition .top-banner{height:58px!important}.normal-edition .multiplier{height:48px!important}}
+
+/* Match supplied reference: curved multiplier ribbon and no replacement dragon artwork */
+.normal-edition .top-banner{position:relative;justify-content:center;overflow:hidden}
+.normal-edition .top-banner .top-banner-caption{display:flex;align-items:center;justify-content:center;width:100%;height:100%;position:relative;z-index:2}
+.normal-edition .top-banner .top-banner-caption small{display:block;font-size:clamp(14px,4vw,20px);font-weight:800;letter-spacing:.14em;color:#f2d49c;text-shadow:0 1px 2px #794333}
+.normal-edition .multiplier{
+ border-radius:0 0 42px 42px / 0 0 18px 18px!important;
+ clip-path:polygon(0 0,100% 0,100% 76%,96% 88%,88% 96%,72% 100%,28% 100%,12% 96%,4% 88%,0 76%);
+}

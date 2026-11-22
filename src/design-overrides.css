@@ -109,3 +109,88 @@ footer{flex:none}
 }
 /* The tile itself is never stretched: each reel distributes equal-height slots */
 .reel .tile{width:100%;flex:1 1 0}
+
+
+/* Final palette lock: muted warm red + light brown, never gray-only or vivid scarlet */
+:root{
+ --mh-frame-top:#B97862;
+ --mh-frame-mid:#A96855;
+ --mh-frame-deep:#895747;
+ --mh-light-brown:#C49A7B;
+ --mh-soft-cream:#F1E6D8;
+ --mh-antique-gold:#B99A68;
+ --mh-jade:#78998A;
+}
+.game-shell{
+ background:radial-gradient(ellipse at 50% 24%,#F0E7DC 0%,#E1D1C0 72%,#CDB8A4 100%);
+}
+.game-frame{
+ background:linear-gradient(180deg,#B97862 0%,#A96855 48%,#895747 100%);
+ border-left-color:#C5A47A;border-right-color:#C5A47A;
+ box-shadow:inset 0 0 0 2px #D2B58B,inset 0 0 24px #5D382B33,0 10px 30px #6C493844;
+}
+.game-frame:before,.game-frame:after{opacity:.38;filter:saturate(.62)}
+.top-banner{
+ background:linear-gradient(180deg,#C58A70 0%,#AE735F 100%);
+ border-bottom-color:#C5A47A;
+}
+.top-banner b{color:#FFF0D9;text-shadow:0 2px 2px #70463877}
+.top-banner small{color:#F3DEC2}
+.dragon-art{opacity:.62;filter:saturate(.62) sepia(.08)}
+.multiplier{
+ background:linear-gradient(180deg,#A9BDB0 0%,#829F90 54%,#6E8D7E 100%);
+ border-color:#C5A47A;
+ box-shadow:inset 0 3px 8px #FFFFFF44,inset 0 -3px 8px #3E5B4C33,0 3px 6px #583B2D33;
+}
+.multiplier>div{color:#385747}
+.multiplier>div.active{color:#F8EBCF;text-shadow:0 1px 3px #405D4A}
+.reels{
+ background:linear-gradient(90deg,#A16C57 0%,#BD8B70 18%,#B17D65 50%,#BD8B70 82%,#A16C57 100%);
+ border-bottom-color:#C5A47A;
+ box-shadow:inset 0 8px 14px #623D3033,inset 0 -8px 14px #623D3033;
+}
+.reels:before,.reels:after{background:linear-gradient(90deg,#9A775C,#D0B58A,#9A775C)}
+.notice{
+ color:#FFF0D9;
+ background:linear-gradient(90deg,#98604E,#B77A62,#98604E);
+ border-color:#C9A878;
+ box-shadow:0 3px 7px #593A2D55,inset 0 1px #FFFFFF22;
+}
+.notice-flourish{color:#E1C89C}
+.account-row>div{
+ background:linear-gradient(180deg,#8E5D49,#70483A);
+ color:#F5E5CD;
+ box-shadow:inset 0 1px 2px #FFFFFF22,0 2px 3px #593A2D44;
+ border-color:#C29D6D;
+}
+.account-row small{color:#E4CBA8}
+.controls button{
+ border-color:#C09B6B;
+ background:linear-gradient(180deg,#A8765D,#865844);
+ color:#FFF0D9;
+ box-shadow:inset 0 1px 2px #FFFFFF2B,0 2px 4px #593A2D55;
+}
+.controls .selected{
+ background:linear-gradient(180deg,#9DB5A4,#718F7E);
+ color:#F7F0E3;border-color:#C8B28B;
+}
+.controls .spin{
+ background:radial-gradient(circle at 35% 25%,#B8CABB,#8DAA98 52%,#648574 82%);
+ border-color:#C8AC78;
+ box-shadow:0 0 0 3px #8B9F87,0 5px 10px #593A2D55;
+ color:#FFF0D9;
+}
+footer{
+ background:linear-gradient(180deg,#9A624E,#794B3B);
+ border-top-color:#C6A477;color:#F3E5D1;
+}
+.win-panel{
+ border-color:#C5A879;
+ background:linear-gradient(145deg,#F4EBDD,#E5D2B4);
+ color:#704F3E;
+ box-shadow:0 8px 24px #4A302777,inset 0 0 0 2px #FFFFFF99;
+}
+.win-panel strong{color:#8A5D43}
+.tile.gold{border-color:#C8AE7C;box-shadow:inset 0 0 10px #FFF9,0 0 9px #D3BA8066}
+.tile.winning{outline-color:#D6BD88;box-shadow:0 0 14px #D6BD8899,0 0 5px #FFF}
+button:focus-visible{outline-color:#E4CF9F}

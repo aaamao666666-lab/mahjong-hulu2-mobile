@@ -194,3 +194,82 @@ footer{
 .tile.gold{border-color:#C8AE7C;box-shadow:inset 0 0 10px #FFF9,0 0 9px #D3BA8066}
 .tile.winning{outline-color:#D6BD88;box-shadow:0 0 14px #D6BD8899,0 0 5px #FFF}
 button:focus-visible{outline-color:#E4CF9F}
+
+
+/* Original Mahjong Hu Le 2 identity: wine-red lacquer, antique gold, jade */
+.game-shell{background:radial-gradient(ellipse at 50% 25%,#c6a58a 0%,#8b5a48 70%,#4a2a24 100%)!important}
+.game-frame{
+ background:linear-gradient(180deg,#71382f 0%,#8a4938 44%,#542a25 100%)!important;
+ border-left:4px solid #c9a46b!important;border-right:4px solid #c9a46b!important;
+ box-shadow:inset 0 0 0 2px #e0c18a,inset 0 0 30px #2c110d88,0 8px 28px #32151088!important
+}
+.top-banner{
+ flex-basis:12%!important;min-height:112px!important;height:auto!important;
+ background:radial-gradient(ellipse at 50% 0%,#914c3d 0%,#682e29 70%,#4b211f 100%)!important;
+ border-bottom:4px solid #d2ad70!important;
+ box-shadow:inset 0 0 0 1px #e3c58e,inset 0 -8px 18px #2c100d66!important;
+}
+.top-banner-caption{gap:5px!important}
+.game-title{
+ margin:0!important;padding:0!important;
+ color:#f8e3b2!important;
+ font-family:Georgia,"Noto Serif SC","Songti SC",serif!important;
+ font-size:clamp(31px,8.6vw,49px)!important;
+ font-weight:1000!important;letter-spacing:.12em!important;line-height:1.05!important;
+ text-shadow:0 2px 0 #8b4c27,0 4px 3px #2d120d,0 0 12px #f0c87988!important;
+ -webkit-text-stroke:.35px #fff0ca;
+}
+.game-title span{
+ color:#7ed18c!important;font-size:1.08em!important;
+ text-shadow:0 2px 0 #285d39,0 0 12px #92e4a077!important;
+}
+.top-banner .top-banner-caption small{
+ display:block!important;color:#f6dfac!important;
+ font-size:clamp(13px,3.7vw,18px)!important;
+ font-weight:900!important;letter-spacing:.18em!important;
+ padding:3px 18px 5px!important;
+ background:linear-gradient(180deg,#8d4a35,#5a2924)!important;
+ border:1px solid #d9b579!important;border-radius:18px!important;
+ box-shadow:inset 0 1px #ffe8bd55,0 2px 4px #260e0b77!important;
+}
+.top-banner .dragon-art{
+ display:block!important;width:25%!important;height:100%!important;top:0!important;
+ opacity:1!important;filter:drop-shadow(0 2px 4px #220d0a99)!important;
+}
+.top-banner .dragon-art.left{left:-1%!important}
+.top-banner .dragon-art.right{right:-1%!important}
+.multiplier{
+ background:linear-gradient(180deg,#2f8d75 0%,#176b5d 55%,#0e4d45 100%)!important;
+ border-color:#d7b577!important;
+ box-shadow:inset 0 4px 10px #b4f1d033,inset 0 -5px 10px #052d2a88,0 3px 6px #2c110d66!important;
+}
+.multiplier>div{color:#dce8d1!important;text-shadow:0 2px 2px #073d35!important}
+.multiplier>div.active{color:#ffe18a!important;text-shadow:0 0 12px #ffe18a,0 2px 2px #53331d!important}
+.reels{
+ background:linear-gradient(90deg,#5d2925 0%,#9b5943 17%,#854634 50%,#9b5943 83%,#5d2925 100%)!important;
+ border-color:#d1ad73!important;
+}
+.reels:before,.reels:after{background:linear-gradient(90deg,#8b6039,#f0d08c,#8b6039)!important}
+.tile{
+ background:linear-gradient(145deg,#fffdf5 0%,#f5ecdb 60%,#d9c9b0 100%)!important;
+ border-color:#d5c29f!important;
+ box-shadow:inset 0 2px 5px #fff, inset 0 -3px 6px #c7bda9,0 3px 6px #2c110d88!important;
+}
+.tile.gold{
+ background:linear-gradient(145deg,#fff6a8 0%,#f4d34f 56%,#bf8126 100%)!important;
+ border:2px solid #ffe9a1!important;
+ box-shadow:inset 0 0 12px #fff,0 0 15px #f7d55b!important;
+}
+.notice{
+ background:linear-gradient(90deg,#64252a,#9e3e3c 50%,#64252a)!important;
+ border-color:#d9b273!important;color:#ffebc5!important;
+}
+.account-row>div{background:linear-gradient(180deg,#773d30,#48241f)!important;border:1px solid #bd915d!important;color:#f5d18a!important}
+.controls.reference-controls{background:linear-gradient(180deg,#8d4937,#5b2b26)!important}
+.controls.reference-controls>button:not(.spin){background:radial-gradient(circle at 35% 24%,#89503b,#48231e 78%)!important;border-color:#c1965d!important}
+.controls.reference-controls .spin{
+ background:radial-gradient(circle at 35% 25%,#a5e0c0 0%,#43ad91 48%,#075b50 82%)!important;
+ border-color:#f0d28a!important;box-shadow:0 0 0 4px #a47b4c,0 0 0 7px #e0bf79,0 0 18px #f7d78a88!important;
+}
+.sound-strip{background:#552923!important;color:#f0d49d!important}
+@media(max-height:740px){.top-banner{flex-basis:11%!important;min-height:92px!important}}

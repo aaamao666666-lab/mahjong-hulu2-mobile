@@ -54,7 +54,7 @@ describe("mahjong game engine", () => {
     let id = 0;
     const next = resolveWinningReels(board, positions, () => tile("zhong", `new-${++id}`));
     expect(next[1].some(t => t.symbol === "wild" && t.id === "wild-1-0")).toBe(true);
-    expect(next.every(reel => reel.length === board[0].length)).toBe(true);
+    expect(next.every((reel, index) => reel.length === board[index].length)).toBe(true);
     expect(next[0].some(t => t.id === "0-0")).toBe(false);
   });
 });

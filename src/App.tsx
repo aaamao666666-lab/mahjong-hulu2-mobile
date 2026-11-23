@@ -77,7 +77,10 @@ export default function App(){
  const multiplier=getMultiplier(freeMode,combo);
 
  async function spin(){
-  if(busy.current||(!freeMode&&balance<bet))return;
+  if(busy.current)return;
+  if(!freeMode&&balance<bet){
+   autoRef.current=false;setAuto(false);setTip("余额不足，请降低投注或停止自动旋转");return;
+  }
   busy.current=true;setSpinning(true);setHighlight(new Set());setWin(0);setPanel("");setEffect("none");
   const isFree=freeMode&&freeSpins>0;
   if(!isFree)setBalance(v=>Number((v-bet).toFixed(2)));

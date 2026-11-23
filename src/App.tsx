@@ -118,9 +118,9 @@ export default function App(){
     setTip(`连锁中奖 +${amount.toFixed(2)}`);
     await wait(turbo?220:650);
     setEffect("cascade");
+    await wait(turbo?90:240);
     current=resolveWinningReels(current,result.winningPositions,makeTile);
     setGrid(current);setHighlight(new Set());setPanel("");
-    await wait(turbo?80:180);
     setEffect("none");
     chain++;setCombo(chain);
     await wait(turbo?80:180);

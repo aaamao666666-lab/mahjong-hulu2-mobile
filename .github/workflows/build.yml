@@ -2,49 +2,45 @@ name: Build and publish mobile game
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
-  group: "pages"
+  group: mobile-game-publish
   cancel-in-progress: true
 
 jobs:
-  build:
+  build-and-publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm install
-      - run: npm run build
-      - name: Upload website build
+      - name: Install dependencies
+        run: npm install
+      - name: Build production site
+        run: npm run build
+      - name: Verify production output
+        run: |
+          test -s dist/index.html
+          test -d dist/assets
+          echo "Production build contains index.html and assets."
+      - name: Archive build
         uses: actions/upload-artifact@v4
         with:
           name: mahjong-hulu2-mobile-dist
           path: dist/
           if-no-files-found: error
-      - name: Upload GitHub Pages artifact
-        if: ${{ github.event_name != 'pull_request' }}
-        uses: actions/upload-pages-artifact@v3
+      - name: Publish static site branch
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: dist/
-
-  deploy-pages:
-    if: ${{ github.event_name != 'pull_request' }}
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./dist
+          force_orphan: true
+          enable_jekyll: false

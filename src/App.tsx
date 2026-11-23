@@ -66,6 +66,7 @@ export default function App(){
  const [rolling,setRolling]=useState<boolean[]>([false,false,false,false,false]);
  const [freeSpins,setFreeSpins]=useState(0),[freeMode,setFreeMode]=useState(false),[combo,setCombo]=useState(0);
  const [highlight,setHighlight]=useState<Set<string>>(new Set()),[tip,setTip]=useState("金色牌中奖后转化为百搭");
+ const [effect,setEffect]=useState<"none"|"win"|"gold-win"|"cascade">("none");
  const [panel,setPanel]=useState("");
  const [auto,setAuto]=useState(false);
  const busy=useRef(false);
@@ -76,7 +77,7 @@ export default function App(){
 
  async function spin(){
   if(busy.current||(!freeMode&&balance<bet))return;
-  busy.current=true;setSpinning(true);setHighlight(new Set());setWin(0);setPanel("");
+  busy.current=true;setSpinning(true);setHighlight(new Set());setWin(0);setPanel("");setEffect("none");
   const isFree=freeMode&&freeSpins>0;
   if(!isFree)setBalance(v=>Number((v-bet).toFixed(2)));
   else setFreeSpins(v=>Math.max(0,v-1));
@@ -109,12 +110,17 @@ export default function App(){
     accumulated=Number((accumulated+amount).toFixed(2));
     setWin(accumulated);setBalance(v=>Number((v+amount).toFixed(2)));
     setHighlight(result.winningPositions);
+    const hasGoldWin=[...result.winningPositions].some(position=>{const [reel,row]=position.split("-").map(Number);return Boolean(current[reel]?.[row]?.gold);});
+    setEffect(hasGoldWin?"gold-win":"win");
     const best=[...result.wins].sort((a,b)=>b.ways-a.ways)[0];
     setPanel(best?`${LABELS[best.symbol]}  ·  ${best.ways}路  ·  ×${mult}`:"中奖");
     setTip(`连锁中奖 +${amount.toFixed(2)}`);
     await wait(turbo?220:650);
+    setEffect("cascade");
     current=resolveWinningReels(current,result.winningPositions,makeTile);
     setGrid(current);setHighlight(new Set());setPanel("");
+    await wait(turbo?80:180);
+    setEffect("none");
     chain++;setCombo(chain);
     await wait(turbo?80:180);
   }
@@ -125,7 +131,7 @@ export default function App(){
   if(autoRef.current)window.setTimeout(()=>{if(autoRef.current&&!busy.current)void spin();},700);
  }
  const startAuto=()=>{const next=!autoRef.current;autoRef.current=next;setAuto(next);if(next&&!busy.current)void spin();};
- return <main className="game-shell"><div className="game-frame">
+ return <main className={`game-shell effect-${effect}`}><div className="game-frame">
   <header className="top-banner"><div className="top-banner-caption"><small>2000 路中奖组合</small></div></header>
   <div className="multiplier">{multipliers.map((m,i)=><div className={(!spinning&&i===Math.min(combo,multipliers.length-1))|| (spinning&&i===Math.min(combo,multipliers.length-1))?"active":""} key={m}>×{m}</div>)}</div>
   {freeMode&&<div className="free-tag">免费旋转剩余：{freeSpins}</div>}

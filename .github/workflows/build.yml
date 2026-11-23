@@ -1,10 +1,19 @@
-name: Build and deploy mobile game
+name: Build and publish mobile game
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -22,18 +31,20 @@ jobs:
           name: mahjong-hulu2-mobile-dist
           path: dist/
           if-no-files-found: error
-      - name: Deploy to Cloudflare Workers
-        if: ${{ vars.CLOUDFLARE_ACCOUNT_ID != '' }}
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
-        run: |
-          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
-            echo "Build succeeded; Cloudflare deployment skipped because CLOUDFLARE_API_TOKEN is not configured."
-            exit 0
-          fi
-          npx --yes wrangler@latest deploy
-      - name: Deployment setup required
-        if: ${{ vars.CLOUDFLARE_ACCOUNT_ID == '' }}
-        run: |
-          echo "Build succeeded. Add repository variable CLOUDFLARE_ACCOUNT_ID and secret CLOUDFLARE_API_TOKEN to enable deployment."
+      - name: Upload GitHub Pages artifact
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/
+
+  deploy-pages:
+    if: ${{ github.event_name != 'pull_request' }}
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

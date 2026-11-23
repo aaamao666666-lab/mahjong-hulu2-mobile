@@ -1,3 +1,4 @@
+import "./game-effects.css";
 import "./design-overrides.css";
 import { useRef, useState } from "react";
 import { Volume2, VolumeX, Zap, Play, Pause, RotateCcw, Plus, Minus, UserRound, ShieldCheck, CircleDollarSign } from "lucide-react";

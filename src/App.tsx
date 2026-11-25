@@ -146,12 +146,17 @@ export default function App(){
   </header>
   <div className="multiplier">{multipliers.map((m,i)=><div className={(!spinning&&i===Math.min(combo,multipliers.length-1))|| (spinning&&i===Math.min(combo,multipliers.length-1))?"active":""} key={m}>×{m}</div>)}</div>
   {freeMode&&<div className="free-tag">免费旋转剩余：{freeSpins}</div>}
-  <section className={`reels ${spinning?"spinning":""}`}>{grid.map((reel,c)=><div className={`reel ${rolling[c]?"rolling":""}`} key={c}>{reel.map((tile,r)=>{
+  <section className={`reels ${spinning?"spinning":""}`}>
+   <div className="dragon-corner tl"><DragonArt side="left" /></div>
+   <div className="dragon-corner tr"><DragonArt side="right" /></div>
+   <div className="dragon-corner bl"><DragonArt side="left" /></div>
+   <div className="dragon-corner br"><DragonArt side="right" /></div>
+   {grid.map((reel,c)=><div className={`reel ${rolling[c]?"rolling":""}`} key={c}>{reel.map((tile,r)=>{
     const key=`${c}-${r}`;const isWin=highlight.has(key);
     return <div key={tile.id} className={`tile ${tile.gold?"gold":""} ${tile.symbol==="wild"?"wild":""} ${tile.symbol==="treasure"?"treasure":""} ${isWin?"winning":""}`}><TileFace symbol={tile.symbol}/>{tile.gold&&<i>金</i>}</div>;
   })}</div>)}
   {panel&&<div className="win-panel">{panel}<strong>¥{win.toFixed(2)}</strong></div>}</section>
-  <div className="notice"><span className="notice-flourish">❖</span>{spinning?tip:"保证出现的金色麻将符号！"}<span className="notice-flourish">❖</span></div>
+  <div className="notice"><span className="notice-flourish">❖</span>{spinning?tip:"获得金色麻将符号, 有机会赢得 百搭"}<span className="notice-flourish">❖</span></div>
   <section className="account-row">
    <div className="stat-pill"><UserRound/><b>¥{balance.toFixed(2)}</b></div>
    <div className="stat-pill pg-pill"><ShieldCheck/><b>PG</b></div>
@@ -165,6 +170,6 @@ export default function App(){
    <button aria-label="自动旋转" onClick={startAuto} className={auto?"selected":""}>{auto?<Pause/>:<Play/>}</button>
   </section>
   <div className="sound-strip"><button onClick={()=>setSound(v=>!v)}>{sound?<Volume2/>:<VolumeX/>} {sound?"声音开启":"声音关闭"}</button><span>本轮赢分 ¥{win.toFixed(2)}</span></div>
-  <footer><button onClick={()=>setPanel("赔付表已按规则图录入")}>赔付表</button><button onClick={()=>setPanel("3个夺宝符号触发10次免费旋转，每多1个增加2次")}>游戏规则</button><button onClick={()=>setPanel("中奖组合按从左至右连续3至5列计算")}>中奖说明</button></footer>
+  <footer><button onClick={()=>setPanel("赔付表已按规则图录入")}赔付表</button><button onClick={()=>setPanel("3个夺宝符号触发10次免费旋转，每多1个增加2次")}游戏规则</button><button onClick={()=>setPanel("中奖组合按从左至右连续3至5列计算")}中奖说明</button></footer>
  </div></main>;
 }

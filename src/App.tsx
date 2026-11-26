@@ -170,6 +170,6 @@ export default function App(){
    <button aria-label="自动旋转" onClick={startAuto} className={auto?"selected":""}>{auto?<Pause/>:<Play/>}</button>
   </section>
   <div className="sound-strip"><button onClick={()=>setSound(v=>!v)}>{sound?<Volume2/>:<VolumeX/>} {sound?"声音开启":"声音关闭"}</button><span>本轮赢分 ¥{win.toFixed(2)}</span></div>
-  <footer><button onClick={()=>setPanel("赔付表已按规则图录入")}赔付表</button><button onClick={()=>setPanel("3个夺宝符号触发10次免费旋转，每多1个增加2次")}游戏规则</button><button onClick={()=>setPanel("中奖组合按从左至右连续3至5列计算")}中奖说明</button></footer>
+  <footer><button onClick={()=>setPanel("赔付表已按规则图录入")}>赔付表</button><button onClick={()=>setPanel("3个夺宝符号触发10次免费旋转，每多1个增加2次")}>游戏规则</button><button onClick={()=>setPanel("中奖组合按从左至右连续3至5列计算")}>中奖说明</button></footer>
  </div></main>;
 }

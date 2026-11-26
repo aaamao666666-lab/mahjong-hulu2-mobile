@@ -1,0 +1,54 @@
+name: Install Mahjong HULU2 UI assets
+
+on:
+  push:
+    branches:
+      - feature/mahjong-hulu2-3d-upgrade
+    paths:
+      - "install-assets.trigger"
+
+permissions:
+  contents: write
+
+jobs:
+  install-assets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/mahjong-hulu2-3d-upgrade
+          fetch-depth: 0
+
+      - name: Extract uploaded asset pack
+        run: |
+          test -f "mahjong-hulu2-ui-assets-ready.zip"
+          unzip -oq "mahjong-hulu2-ui-assets-ready.zip" -d /tmp/mahjong-assets
+          test -d /tmp/mahjong-assets/public/assets/mahjong-hulu2
+          mkdir -p public/assets
+          cp -R /tmp/mahjong-assets/public/assets/mahjong-hulu2 public/assets/
+
+      - name: Validate PNG assets
+        run: |
+          count=$(find public/assets/mahjong-hulu2 -type f -name '*.png' | wc -l)
+          echo "PNG assets: $count"
+          test "$count" -ge 40
+          find public/assets/mahjong-hulu2 -type f -name '*.png' -print0 | xargs -0 file
+
+      - name: Commit assets to feature branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/assets/mahjong-hulu2
+          if git diff --cached --quiet; then
+            echo "No asset changes to commit"
+          else
+            git commit -m "Add Mahjong HULU2 UI and effect PNG assets"
+            git push origin HEAD:feature/mahjong-hulu2-3d-upgrade
+          fi
+
+      - name: Build and test
+        run: |
+          npm install
+          npm run build
+          npm test

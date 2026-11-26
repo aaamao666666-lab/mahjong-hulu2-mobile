@@ -1,1 +1,1 @@
-Install uploaded Mahjong HULU2 UI assets from the ZIP in this feature branch.
+Re-run build and test after fixing BASE_URL-aware image references.

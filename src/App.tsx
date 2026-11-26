@@ -164,13 +164,13 @@ export default function App(){
    <div className="stat-pill asset-stat"><img src="/assets/mahjong-hulu2/ui/27_balance_panel_transparent.png" alt="" /><b>¥{bet.toFixed(2)}</b></div>
   </section>
   <section className="controls reference-controls">
-   <button aria-label="加速" onClick={()=>setTurbo(v=>!v)} className={turbo?"selected asset-control":"asset-control"}><img src="/assets/mahjong-hulu2/ui/20_mute_button_transparent.png" alt="" /></button>
+   <button aria-label="加速" onClick={()=>setTurbo(v=>!v)} className={turbo?"selected":" "}><Zap/></button>
    <button aria-label="减少投注" disabled={spinning||freeMode} onClick={()=>setBetLevel(v=>Math.max(1,v-1))} className="asset-control"><img src="/assets/mahjong-hulu2/ui/21_minus_button_transparent.png" alt="" /></button>
    <button className="spin asset-control" aria-label="旋转" disabled={spinning} onClick={()=>void spin()}><img src="/assets/mahjong-hulu2/ui/22_spin_button_transparent.png" alt="" /></button>
    <button aria-label="增加投注" disabled={spinning||freeMode} onClick={()=>setBetLevel(v=>Math.min(20,v+1))} className="asset-control"><img src="/assets/mahjong-hulu2/ui/23_plus_button_transparent.png" alt="" /></button>
    <button aria-label="自动旋转" onClick={startAuto} className={auto?"selected asset-control":"asset-control"}><img src="/assets/mahjong-hulu2/ui/24_auto_button_transparent.png" alt="" /></button>
   </section>
-  <div className="sound-strip"><button onClick={()=>setSound(v=>!v)}>{sound?<Volume2/>:<VolumeX/>} {sound?"声音开启":"声音关闭"}</button><span>本轮赢分 ¥{win.toFixed(2)}</span></div>
+  <div className="sound-strip"><button onClick={()=>setSound(v=>!v)}><img className="sound-icon" src="/assets/mahjong-hulu2/ui/20_mute_button_transparent.png" alt="" /> {sound?"声音开启":"声音关闭"}</button><span>本轮赢分 ¥{win.toFixed(2)}</span></div>
   <footer><button onClick={()=>setPaytableSymbol("fa")}>赔付表</button><button onClick={()=>setPanel("3个夺宝符号触发10次免费旋转，每多1个增加2次")}>游戏规则</button><button onClick={()=>setPanel("中奖组合按从左至右连续3至5列计算")}>中奖说明</button></footer>
  </div>
  {paytableSymbol&&<div className="paytable-backdrop" role="presentation" onClick={()=>setPaytableSymbol(null)}><section className="paytable-card" role="dialog" aria-modal="true" aria-label="麻将赔率表" onClick={event=>event.stopPropagation()}><button className="paytable-close" aria-label="关闭赔率表" onClick={()=>setPaytableSymbol(null)}>×</button><div className="paytable-kicker">MAHJONG PAYTABLE</div><h2>{LABELS[paytableSymbol]} <span>赔率说明</span></h2>{PAYTABLE[paytableSymbol]?<><p className="paytable-note">从左至右连续匹配 3–5 列；数值为每 100 注的基础赔付表值。</p><table><thead><tr><th>连中列数</th><th>赔率表值</th><th>当前注额参考</th></tr></thead><tbody>{([3,4,5] as const).map(count=><tr key={count}><td>{count} 列</td><td>×{PAYTABLE[paytableSymbol]![count]}</td><td>¥{(PAYTABLE[paytableSymbol]![count]/100*bet).toFixed(2)}</td></tr>)}</tbody></table></>:<div className="paytable-special">{paytableSymbol==="treasure"?"夺宝符号：3 个或以上触发免费旋转。":paytableSymbol==="wild"?"百搭：可替代普通付费麻将，不替代夺宝符号。":"特殊麻将：按游戏规则触发，不属于普通赔付牌型。"}</div>}<div className="paytable-foot">实际中奖金额还会受中奖路数与当前倍率影响</div></section></div>}

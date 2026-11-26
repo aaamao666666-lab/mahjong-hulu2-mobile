@@ -96,3 +96,21 @@
 .sound-strip .sound-icon{width:25px;height:25px;object-fit:contain;vertical-align:middle}
 .sound-strip button{display:inline-flex;align-items:center;gap:6px}
 @media(max-height:740px){.controls .spin.asset-control{width:68px;height:68px;min-width:68px}.controls .spin.asset-control img{max-width:68px;max-height:68px}}
+
+
+/* Real PNG VFX layers from the user's generated asset sets */
+.tile.gold::before{content:"";position:absolute;z-index:0;inset:-13%;background:url("/assets/mahjong-hulu2/effects/02_gold_tile_glow.png") center/contain no-repeat;opacity:.62;pointer-events:none}
+.effect-gold-win .tile.winning::before{background-image:url("/assets/mahjong-hulu2/effects/05_gold_tile_spark_burst.png");inset:-28%;opacity:.95}
+.effect-win .fx-overlay,.effect-gold-win .fx-overlay{position:absolute;z-index:2;inset:0;pointer-events:none;background:url("/assets/mahjong-hulu2/effects/16_gold_landing_burst.png") center 52%/min(70vw,340px) auto no-repeat;opacity:.8;animation:mhOverlayBurst .7s ease-out both}
+@keyframes mhOverlayBurst{0%{opacity:0;transform:scale(.55)}35%{opacity:.9}100%{opacity:0;transform:scale(1.28)}}
+.effect-gold-win .fx-overlay{background-image:url("/assets/mahjong-hulu2/effects/17_gold_star_particles.png"),url("/assets/mahjong-hulu2/effects/16_gold_landing_burst.png");background-position:center 36%,center 55%;background-size:min(80vw,390px) auto,min(70vw,340px) auto}
+.effect-cascade .fx-overlay{position:absolute;z-index:4;inset:8% 0 8%;pointer-events:none;background:url("/assets/mahjong-hulu2/effects/13_single_line_tile_elimination_sequence.png") center/700% 100% no-repeat;animation:mhCascadeSprite .38s steps(7) both}
+@keyframes mhCascadeSprite{from{background-position:0 50%;opacity:1}to{background-position:100% 50%;opacity:0}}
+.effect-cascade .reels{filter:brightness(1.08)}
+.controls .spin.asset-control:after{content:"";position:absolute;inset:-9%;background:url("/assets/mahjong-hulu2/effects/12_spin_button_energy_orbit.png") center/contain no-repeat;pointer-events:none;opacity:.72;animation:mhOrbit 3s linear infinite}
+.effect-none .controls .spin.asset-control:after{background-image:url("/assets/mahjong-hulu2/effects/09_spin_button_idle_glow.png");animation:mhOrbit 8s linear infinite;opacity:.5}
+@keyframes mhOrbit{to{transform:rotate(360deg)}}
+.free-tag{background-image:url("/assets/mahjong-hulu2/effects/07_red_banner_free_spins_10.png");background-position:center;background-size:contain;background-repeat:no-repeat;background-color:transparent;border:0;text-shadow:0 1px 3px #4d1b12;padding:11px 8px}
+.win-panel{background-image:url("/assets/mahjong-hulu2/effects/08_red_banner_win_amount.png");background-position:center;background-size:100% 100%;background-repeat:no-repeat;background-color:transparent;border:0;border-radius:0;box-shadow:none;color:#fff0c9;text-shadow:0 1px 3px #652317;padding:20px 24px}
+.win-panel strong{color:#ffe8a0;text-shadow:0 2px 3px #692116}
+@media(prefers-reduced-motion:reduce){.fx-overlay,.controls .spin.asset-control:after{animation:none!important}}

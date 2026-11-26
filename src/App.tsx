@@ -156,6 +156,7 @@ export default function App(){
     const key=`${c}-${r}`;const isWin=highlight.has(key);
     return <div key={tile.id} role="button" tabIndex={spinning?-1:0} title="点击查看该麻将赔率" onClick={()=>{if(!spinning)setPaytableSymbol(tile.symbol);}} onKeyDown={event=>{if(!spinning&&(event.key==="Enter"||event.key===" ")){event.preventDefault();setPaytableSymbol(tile.symbol);}}} className={`tile ${tile.gold?"gold":""} ${tile.symbol==="wild"?"wild":""} ${tile.symbol==="treasure"?"treasure":""} ${isWin?"winning":""}`}><TileFace symbol={tile.symbol}/>{tile.gold&&<i>金</i>}</div>;
   })}</div>)}
+  <div className={`fx-overlay fx-${effect}`} aria-hidden="true" />
   {panel&&<div className="win-panel">{panel}<strong>¥{win.toFixed(2)}</strong></div>}</section>
   <div className="notice"><span className="notice-flourish">❖</span>{spinning?tip:"获得金色麻将符号, 有机会赢得 百搭"}<span className="notice-flourish">❖</span></div>
   <section className="account-row">

@@ -1,6 +1,6 @@
 import "./game-effects.css";
 import "./design-overrides.css";
-import { useRef, useState } from "react";
+import { useRef, useState, type CSSProperties } from "react";
 import { Volume2, VolumeX, Zap, Play, Pause, RotateCcw, Plus, Minus, UserRound, ShieldCheck, CircleDollarSign } from "lucide-react";
 import {
   type Tile, type SymbolId, type ReelGrid, NORMAL_MULTIPLIERS,
@@ -10,6 +10,17 @@ import {
 
 const ASSET_BASE = `${import.meta.env.BASE_URL}assets/mahjong-hulu2`;
 const asset = (path: string) => `${ASSET_BASE}/${path}`;
+const effectAssetStyle: CSSProperties = {
+  "--mh-gold-tile-glow": `url("${asset("effects/02_gold_tile_glow.png")}")`,
+  "--mh-gold-tile-burst": `url("${asset("effects/05_gold_tile_spark_burst.png")}")`,
+  "--mh-gold-landing": `url("${asset("effects/16_gold_landing_burst.png")}")`,
+  "--mh-gold-particles": `url("${asset("effects/17_gold_star_particles.png")}")`,
+  "--mh-cascade-sprite": `url("${asset("effects/13_single_line_tile_elimination_sequence.png")}")`,
+  "--mh-spin-orbit": `url("${asset("effects/12_spin_button_energy_orbit.png")}")`,
+  "--mh-spin-idle": `url("${asset("effects/09_spin_button_idle_glow.png")}")`,
+  "--mh-free-banner": `url("${asset("effects/07_red_banner_free_spins_10.png")}")`,
+  "--mh-win-banner": `url("${asset("effects/08_red_banner_win_amount.png")}")`,
+} as CSSProperties;
 const ROWS = [4,5,5,5,4];
 const NORMAL_EDITION = new URLSearchParams(window.location.search).get("edition") === "normal";
 const SYMBOLS: SymbolId[] = ["fa","zhong","blueFrame","wan8","fiveDots","bambooRed","threeDots","twoDots","singleDots"];
@@ -138,7 +149,7 @@ export default function App(){
   if(autoRef.current)window.setTimeout(()=>{if(autoRef.current&&!busy.current)void spin();},700);
  }
  const startAuto=()=>{const next=!autoRef.current;autoRef.current=next;setAuto(next);if(next&&!busy.current)void spin();};
- return <main className={`game-shell effect-${effect}`}><div className="game-frame">
+ return <main className={`game-shell effect-${effect}`} style={effectAssetStyle}><div className="game-frame">
   <header className="top-banner">
    <img className="asset-dragon" src={asset("ui/02_top_left_dragon_original_crop.png")} alt="" />
    <div className="top-banner-caption">

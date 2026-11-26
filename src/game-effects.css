@@ -60,3 +60,23 @@
     animation-iteration-count:1!important;
   }
 }
+
+
+/* Tap-to-inspect tile payout panel */
+.tile[role="button"]{cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.tile[role="button"]:focus-visible{outline:3px solid #f7d77d;outline-offset:2px}
+.paytable-backdrop{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:22px;background:#160706c9;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+.paytable-card{position:relative;width:min(100%,430px);padding:25px 20px 18px;border:2px solid #f1c66e;border-radius:22px;color:#fff4d6;background:radial-gradient(ellipse at 50% 0%,#a93a32 0,#651a20 48%,#351015 100%);box-shadow:0 18px 65px #000b,inset 0 0 0 3px #7e342a,inset 0 0 28px #f1c66e35}
+.paytable-card:before{content:"";position:absolute;inset:7px;border:1px solid #e7b85c77;border-radius:15px;pointer-events:none}
+.paytable-close{position:absolute;right:14px;top:12px;z-index:2;width:34px;height:34px;border:1px solid #f3d18b;border-radius:50%;color:#fff1c9;background:#45121c;font-size:25px;line-height:1}
+.paytable-kicker{color:#f3ce80;font-size:9px;letter-spacing:3px;text-align:center;font-weight:800}
+.paytable-card h2{margin:8px 0 12px;text-align:center;color:#ffe7a7;font-size:25px;text-shadow:0 2px 0 #7c321b,0 0 15px #ffcf68}
+.paytable-card h2 span{font-size:17px}
+.paytable-note{margin:0 0 15px;text-align:center;color:#f5dcb5;font-size:12px;line-height:1.6}
+.paytable-card table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border:1px solid #e6bd70;border-radius:12px;background:#45151bd9;font-size:13px}
+.paytable-card th{padding:12px 5px;color:#5a1b14;background:linear-gradient(#ffe9a8,#d99c42);font-weight:900}
+.paytable-card td{padding:13px 5px;text-align:center;border-top:1px solid #d7a85b55;color:#fff1d3;font-variant-numeric:tabular-nums}
+.paytable-card tbody tr:nth-child(2){background:#ffffff0b}
+.paytable-special{padding:20px 14px;border:1px solid #e4b65f;border-radius:12px;background:#3d1118;text-align:center;line-height:1.8;color:#ffedc5}
+.paytable-foot{margin-top:14px;text-align:center;color:#e7c58e;font-size:11px;line-height:1.5}
+@media(max-width:380px){.paytable-card{padding:22px 14px 15px}.paytable-card h2{font-size:22px}.paytable-card td,.paytable-card th{font-size:11px}}

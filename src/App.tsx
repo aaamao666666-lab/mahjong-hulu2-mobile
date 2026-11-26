@@ -8,7 +8,7 @@ import {
   isGoldEligible, evaluateWays, resolveWinningReels
 } from "./game/engine";
 
-const ASSET_BASE = `${import.meta.env.BASE_URL}assets/mahjong-hulu2`;
+const ASSET_BASE = "assets/mahjong-hulu2";
 const asset = (path: string) => `${ASSET_BASE}/${path}`;
 const effectAssetStyle: CSSProperties = {
   "--mh-gold-tile-glow": `url("${asset("effects/02_gold_tile_glow.png")}")`,

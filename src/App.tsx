@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { Volume2, VolumeX, Zap, Play, Pause, RotateCcw, Plus, Minus, UserRound, ShieldCheck, CircleDollarSign } from "lucide-react";
 import {
   type Tile, type SymbolId, type ReelGrid, NORMAL_MULTIPLIERS,
-  FREE_MULTIPLIERS, countTreasureSymbols, freeSpinsAwarded, getMultiplier,
+  FREE_MULTIPLIERS, PAYTABLE, countTreasureSymbols, freeSpinsAwarded, getMultiplier,
   isGoldEligible, evaluateWays, resolveWinningReels
 } from "./game/engine";
 
@@ -69,6 +69,7 @@ export default function App(){
  const [highlight,setHighlight]=useState<Set<string>>(new Set()),[tip,setTip]=useState("金色牌中奖后转化为百搭");
  const [effect,setEffect]=useState<"none"|"win"|"gold-win"|"cascade">("none");
  const [panel,setPanel]=useState("");
+ const [paytableSymbol,setPaytableSymbol]=useState<SymbolId|null>(null);
  const [auto,setAuto]=useState(false);
  const busy=useRef(false);
  const autoRef=useRef(false);
@@ -153,7 +154,7 @@ export default function App(){
    <div className="dragon-corner br"><DragonArt side="right" /></div>
    {grid.map((reel,c)=><div className={`reel ${rolling[c]?"rolling":""}`} key={c}>{reel.map((tile,r)=>{
     const key=`${c}-${r}`;const isWin=highlight.has(key);
-    return <div key={tile.id} className={`tile ${tile.gold?"gold":""} ${tile.symbol==="wild"?"wild":""} ${tile.symbol==="treasure"?"treasure":""} ${isWin?"winning":""}`}><TileFace symbol={tile.symbol}/>{tile.gold&&<i>金</i>}</div>;
+    return <div key={tile.id} role="button" tabIndex={spinning?-1:0} title="点击查看该麻将赔率" onClick={()=>{if(!spinning)setPaytableSymbol(tile.symbol);}} onKeyDown={event=>{if(!spinning&&(event.key==="Enter"||event.key===" ")){event.preventDefault();setPaytableSymbol(tile.symbol);}}} className={`tile ${tile.gold?"gold":""} ${tile.symbol==="wild"?"wild":""} ${tile.symbol==="treasure"?"treasure":""} ${isWin?"winning":""}`}><TileFace symbol={tile.symbol}/>{tile.gold&&<i>金</i>}</div>;
   })}</div>)}
   {panel&&<div className="win-panel">{panel}<strong>¥{win.toFixed(2)}</strong></div>}</section>
   <div className="notice"><span className="notice-flourish">❖</span>{spinning?tip:"获得金色麻将符号, 有机会赢得 百搭"}<span className="notice-flourish">❖</span></div>
@@ -170,6 +171,8 @@ export default function App(){
    <button aria-label="自动旋转" onClick={startAuto} className={auto?"selected":""}>{auto?<Pause/>:<Play/>}</button>
   </section>
   <div className="sound-strip"><button onClick={()=>setSound(v=>!v)}>{sound?<Volume2/>:<VolumeX/>} {sound?"声音开启":"声音关闭"}</button><span>本轮赢分 ¥{win.toFixed(2)}</span></div>
-  <footer><button onClick={()=>setPanel("赔付表已按规则图录入")}>赔付表</button><button onClick={()=>setPanel("3个夺宝符号触发10次免费旋转，每多1个增加2次")}>游戏规则</button><button onClick={()=>setPanel("中奖组合按从左至右连续3至5列计算")}>中奖说明</button></footer>
- </div></main>;
+  <footer><button onClick={()=>setPaytableSymbol("fa")}>赔付表</button><button onClick={()=>setPanel("3个夺宝符号触发10次免费旋转，每多1个增加2次")}>游戏规则</button><button onClick={()=>setPanel("中奖组合按从左至右连续3至5列计算")}>中奖说明</button></footer>
+ </div>
+ {paytableSymbol&&<div className="paytable-backdrop" role="presentation" onClick={()=>setPaytableSymbol(null)}><section className="paytable-card" role="dialog" aria-modal="true" aria-label="麻将赔率表" onClick={event=>event.stopPropagation()}><button className="paytable-close" aria-label="关闭赔率表" onClick={()=>setPaytableSymbol(null)}>×</button><div className="paytable-kicker">MAHJONG PAYTABLE</div><h2>{LABELS[paytableSymbol]} <span>赔率说明</span></h2>{PAYTABLE[paytableSymbol]?<><p className="paytable-note">从左至右连续匹配 3–5 列；数值为每 100 注的基础赔付表值。</p><table><thead><tr><th>连中列数</th><th>赔率表值</th><th>当前注额参考</th></tr></thead><tbody>{([3,4,5] as const).map(count=><tr key={count}><td>{count} 列</td><td>×{PAYTABLE[paytableSymbol]![count]}</td><td>¥{(PAYTABLE[paytableSymbol]![count]/100*bet).toFixed(2)}</td></tr>)}</tbody></table></>:<div className="paytable-special">{paytableSymbol==="treasure"?"夺宝符号：3 个或以上触发免费旋转。":paytableSymbol==="wild"?"百搭：可替代普通付费麻将，不替代夺宝符号。":"特殊麻将：按游戏规则触发，不属于普通赔付牌型。"}</div>}<div className="paytable-foot">实际中奖金额还会受中奖路数与当前倍率影响</div></section></div>}
+ </main>;
 }

@@ -8,6 +8,8 @@ import {
   isGoldEligible, evaluateWays, resolveWinningReels
 } from "./game/engine";
 
+const ASSET_BASE = `${import.meta.env.BASE_URL}assets/mahjong-hulu2`;
+const asset = (path: string) => `${ASSET_BASE}/${path}`;
 const ROWS = [4,5,5,5,4];
 const NORMAL_EDITION = new URLSearchParams(window.location.search).get("edition") === "normal";
 const SYMBOLS: SymbolId[] = ["fa","zhong","blueFrame","wan8","fiveDots","bambooRed","threeDots","twoDots","singleDots"];
@@ -138,20 +140,20 @@ export default function App(){
  const startAuto=()=>{const next=!autoRef.current;autoRef.current=next;setAuto(next);if(next&&!busy.current)void spin();};
  return <main className={`game-shell effect-${effect}`}><div className="game-frame">
   <header className="top-banner">
-   <img className="asset-dragon" src="/assets/mahjong-hulu2/ui/02_top_left_dragon_original_crop.png" alt="" />
+   <img className="asset-dragon" src={asset("ui/02_top_left_dragon_original_crop.png")} alt="" />
    <div className="top-banner-caption">
     <h1 className="game-title">麻将胡了<span>2</span></h1>
     <small>2000 路中奖组合</small>
    </div>
-   <img className="asset-dragon" src="/assets/mahjong-hulu2/ui/03_top_right_dragon_original_crop.png" alt="" />
+   <img className="asset-dragon" src={asset("ui/03_top_right_dragon_original_crop.png")} alt="" />
   </header>
   <div className="multiplier">{multipliers.map((m,i)=><div className={(!spinning&&i===Math.min(combo,multipliers.length-1))|| (spinning&&i===Math.min(combo,multipliers.length-1))?"active":""} key={m}>×{m}</div>)}</div>
   {freeMode&&<div className="free-tag">免费旋转剩余：{freeSpins}</div>}
   <section className={`reels ${spinning?"spinning":""}`}>
-   <div className="dragon-corner tl"><img src="/assets/mahjong-hulu2/ui/02_top_left_dragon_original_crop.png" alt="" /></div>
-   <div className="dragon-corner tr"><img src="/assets/mahjong-hulu2/ui/03_top_right_dragon_original_crop.png" alt="" /></div>
-   <div className="dragon-corner bl"><img src="/assets/mahjong-hulu2/ui/04_bottom_left_dragon_original_crop.png" alt="" /></div>
-   <div className="dragon-corner br"><img src="/assets/mahjong-hulu2/ui/05_bottom_right_dragon_original_crop.png" alt="" /></div>
+   <div className="dragon-corner tl"><img src={asset("ui/02_top_left_dragon_original_crop.png")} alt="" /></div>
+   <div className="dragon-corner tr"><img src={asset("ui/03_top_right_dragon_original_crop.png")} alt="" /></div>
+   <div className="dragon-corner bl"><img src={asset("ui/04_bottom_left_dragon_original_crop.png")} alt="" /></div>
+   <div className="dragon-corner br"><img src={asset("ui/05_bottom_right_dragon_original_crop.png")} alt="" /></div>
    {grid.map((reel,c)=><div className={`reel ${rolling[c]?"rolling":""}`} key={c}>{reel.map((tile,r)=>{
     const key=`${c}-${r}`;const isWin=highlight.has(key);
     return <div key={tile.id} role="button" tabIndex={spinning?-1:0} title="点击查看该麻将赔率" onClick={()=>{if(!spinning)setPaytableSymbol(tile.symbol);}} onKeyDown={event=>{if(!spinning&&(event.key==="Enter"||event.key===" ")){event.preventDefault();setPaytableSymbol(tile.symbol);}}} className={`tile ${tile.gold?"gold":""} ${tile.symbol==="wild"?"wild":""} ${tile.symbol==="treasure"?"treasure":""} ${isWin?"winning":""}`}><TileFace symbol={tile.symbol}/>{tile.gold&&<i>金</i>}</div>;
@@ -160,18 +162,18 @@ export default function App(){
   {panel&&<div className="win-panel">{panel}<strong>¥{win.toFixed(2)}</strong></div>}</section>
   <div className="notice"><span className="notice-flourish">❖</span>{spinning?tip:"获得金色麻将符号, 有机会赢得 百搭"}<span className="notice-flourish">❖</span></div>
   <section className="account-row">
-   <div className="stat-pill asset-stat"><img src="/assets/mahjong-hulu2/ui/25_user_wallet_panel_transparent.png" alt="" /><b>¥{balance.toFixed(2)}</b></div>
-   <div className="stat-pill pg-pill asset-stat"><img src="/assets/mahjong-hulu2/ui/26_pg_panel_transparent.png" alt="" /><b>PG</b></div>
-   <div className="stat-pill asset-stat"><img src="/assets/mahjong-hulu2/ui/27_balance_panel_transparent.png" alt="" /><b>¥{bet.toFixed(2)}</b></div>
+   <div className="stat-pill asset-stat"><img src={asset("ui/25_user_wallet_panel_transparent.png")} alt="" /><b>¥{balance.toFixed(2)}</b></div>
+   <div className="stat-pill pg-pill asset-stat"><img src={asset("ui/26_pg_panel_transparent.png")} alt="" /><b>PG</b></div>
+   <div className="stat-pill asset-stat"><img src={asset("ui/27_balance_panel_transparent.png")} alt="" /><b>¥{bet.toFixed(2)}</b></div>
   </section>
   <section className="controls reference-controls">
    <button aria-label="加速" onClick={()=>setTurbo(v=>!v)} className={turbo?"selected":" "}><Zap/></button>
-   <button aria-label="减少投注" disabled={spinning||freeMode} onClick={()=>setBetLevel(v=>Math.max(1,v-1))} className="asset-control"><img src="/assets/mahjong-hulu2/ui/21_minus_button_transparent.png" alt="" /></button>
-   <button className="spin asset-control" aria-label="旋转" disabled={spinning} onClick={()=>void spin()}><img src="/assets/mahjong-hulu2/ui/22_spin_button_transparent.png" alt="" /></button>
-   <button aria-label="增加投注" disabled={spinning||freeMode} onClick={()=>setBetLevel(v=>Math.min(20,v+1))} className="asset-control"><img src="/assets/mahjong-hulu2/ui/23_plus_button_transparent.png" alt="" /></button>
-   <button aria-label="自动旋转" onClick={startAuto} className={auto?"selected asset-control":"asset-control"}><img src="/assets/mahjong-hulu2/ui/24_auto_button_transparent.png" alt="" /></button>
+   <button aria-label="减少投注" disabled={spinning||freeMode} onClick={()=>setBetLevel(v=>Math.max(1,v-1))} className="asset-control"><img src={asset("ui/21_minus_button_transparent.png")} alt="" /></button>
+   <button className="spin asset-control" aria-label="旋转" disabled={spinning} onClick={()=>void spin()}><img src={asset("ui/22_spin_button_transparent.png")} alt="" /></button>
+   <button aria-label="增加投注" disabled={spinning||freeMode} onClick={()=>setBetLevel(v=>Math.min(20,v+1))} className="asset-control"><img src={asset("ui/23_plus_button_transparent.png")} alt="" /></button>
+   <button aria-label="自动旋转" onClick={startAuto} className={auto?"selected asset-control":"asset-control"}><img src={asset("ui/24_auto_button_transparent.png")} alt="" /></button>
   </section>
-  <div className="sound-strip"><button onClick={()=>setSound(v=>!v)}><img className="sound-icon" src="/assets/mahjong-hulu2/ui/20_mute_button_transparent.png" alt="" /> {sound?"声音开启":"声音关闭"}</button><span>本轮赢分 ¥{win.toFixed(2)}</span></div>
+  <div className="sound-strip"><button onClick={()=>setSound(v=>!v)}><img className="sound-icon" src={asset("ui/20_mute_button_transparent.png")} alt="" /> {sound?"声音开启":"声音关闭"}</button><span>本轮赢分 ¥{win.toFixed(2)}</span></div>
   <footer><button onClick={()=>setPaytableSymbol("fa")}>赔付表</button><button onClick={()=>setPanel("3个夺宝符号触发10次免费旋转，每多1个增加2次")}>游戏规则</button><button onClick={()=>setPanel("中奖组合按从左至右连续3至5列计算")}>中奖说明</button></footer>
  </div>
  {paytableSymbol&&<div className="paytable-backdrop" role="presentation" onClick={()=>setPaytableSymbol(null)}><section className="paytable-card" role="dialog" aria-modal="true" aria-label="麻将赔率表" onClick={event=>event.stopPropagation()}><button className="paytable-close" aria-label="关闭赔率表" onClick={()=>setPaytableSymbol(null)}>×</button><div className="paytable-kicker">MAHJONG PAYTABLE</div><h2>{LABELS[paytableSymbol]} <span>赔率说明</span></h2>{PAYTABLE[paytableSymbol]?<><p className="paytable-note">从左至右连续匹配 3–5 列；数值为每 100 注的基础赔付表值。</p><table><thead><tr><th>连中列数</th><th>赔率表值</th><th>当前注额参考</th></tr></thead><tbody>{([3,4,5] as const).map(count=><tr key={count}><td>{count} 列</td><td>×{PAYTABLE[paytableSymbol]![count]}</td><td>¥{(PAYTABLE[paytableSymbol]![count]/100*bet).toFixed(2)}</td></tr>)}</tbody></table></>:<div className="paytable-special">{paytableSymbol==="treasure"?"夺宝符号：3 个或以上触发免费旋转。":paytableSymbol==="wild"?"百搭：可替代普通付费麻将，不替代夺宝符号。":"特殊麻将：按游戏规则触发，不属于普通赔付牌型。"}</div>}<div className="paytable-foot">实际中奖金额还会受中奖路数与当前倍率影响</div></section></div>}

@@ -6,7 +6,8 @@ on:
       - feature/mahjong-hulu2-3d-upgrade
     paths:
       - "src/**"
-      - "public/assets/mahjong-hulu2/**"
+      - "public/mahjong/**"
+      - "public/assets/mahjong-hulu2/ui/**"
       - "index.html"
       - "package.json"
       - "package-lock.json"
@@ -26,55 +27,31 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout this feature branch
+      - name: Checkout feature branch
         uses: actions/checkout@v4
         with:
           ref: feature/mahjong-hulu2-3d-upgrade
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-
+          cache: npm
       - name: Install dependencies
         run: npm install
-
-      - name: Verify required Mahjong effect PNGs
+      - name: Verify original Mahjong PNG folders
         shell: bash
         run: |
           set -euo pipefail
-          for file in \
-            02_gold_tile_glow.png \
-            05_gold_tile_spark_burst.png \
-            16_gold_landing_burst.png \
-            17_gold_star_particles.png \
-            13_single_line_tile_elimination_sequence.png \
-            12_spin_button_energy_orbit.png \
-            09_spin_button_idle_glow.png \
-            07_red_banner_free_spins_10.png \
-            08_red_banner_win_amount.png; do
-            test -s "public/assets/mahjong-hulu2/effects/$file"
-            echo "OK: $file"
-          done
-
+          test -d public/mahjong/normal
+          test -d public/mahjong/gold
+          test "$(find public/mahjong/normal -maxdepth 1 -type f -name '*.png' | wc -l)" -gt 0
+          test "$(find public/mahjong/gold -maxdepth 1 -type f -name '*.png' | wc -l)" -gt 0
       - name: Run game engine tests
         run: npm test
-
       - name: Build production bundle
         run: npm run build
-
-      - name: Verify built output and relative asset references
-        shell: bash
-        run: |
-          set -euo pipefail
-          test -s dist/index.html
-          test -d dist/assets
-          if grep -R -nE 'url\(["\x27]?/assets/mahjong-hulu2/effects/' src/game-effects.css; then
-            echo "Absolute effect asset URL found"
-            exit 1
-          fi
-          echo "Build output verified"
-
+      - name: Verify build output
+        run: test -s dist/index.html && test -d dist/assets
       - name: Deploy to this project's workers.dev
         uses: cloudflare/wrangler-action@v3
         with:

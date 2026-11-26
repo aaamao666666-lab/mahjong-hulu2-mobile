@@ -5,16 +5,9 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
     <meta name="theme-color" content="#bd6b50" />
     <title>麻将胡了2</title>
-    <link rel="stylesheet" href="./assets/game.css" id="fallback-css" />
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module">
-      // Vite dev/build loads the TypeScript entry. GitHub Pages branch deploys
-      // cannot execute .tsx, so fall back to the committed production bundle.
-      import("./src/main.tsx")
-        .then(() => document.getElementById("fallback-css")?.remove())
-        .catch(() => import("./assets/game.js"));
-    </script>
+    <div id="app"></div>
+    <script type="module" src="./src/main.ts"></script>
   </body>
 </html>

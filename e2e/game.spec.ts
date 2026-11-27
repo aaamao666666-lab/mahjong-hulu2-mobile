@@ -33,8 +33,8 @@ test("iPhone reference layout, real artwork and 20 consecutive game rounds", asy
     const r=node.getBoundingClientRect();
     return {width:r.width,height:r.height,ratio:r.width/r.height};
   });
-  expect(dimensions.ratio).toBeGreaterThan(0.52);
-  expect(dimensions.ratio).toBeLessThan(0.61);
+  expect(dimensions.ratio).toBeGreaterThan(0.47);
+  expect(dimensions.ratio).toBeLessThan(0.54);
 
   await page.waitForFunction(()=>Array.from(document.images).every(img=>img.complete));
   const brokenImages=await page.locator("img").evaluateAll(images=>

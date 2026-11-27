@@ -85,7 +85,7 @@ describe("Mahjong Ways 2 rules engine",()=>{
   expect(result.wins.some(w=>w.symbol==="fa")).toBe(true);
  });
  it("pays scatter by count anywhere on the board",()=>{
-  const board=fullGrid(["treasure","fa","zhong","fa","zhong"],["fa","zhong","blueFrame","wan8","fiveDots"]);
+  const board=fullGrid(["treasure","treasure","treasure","fa","zhong"],["fa","zhong","blueFrame","wan8","fiveDots"]);
   const result=evaluateWays(board,0.2);
   const scatter=result.wins.find(w=>w.kind==="scatter");
   expect(scatter?.tableValue).toBe(10);

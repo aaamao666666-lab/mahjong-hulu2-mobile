@@ -77,11 +77,18 @@ function TileFace({symbol,gold=false}:{symbol:SymbolId;gold?:boolean}) {
   return <span className="tile-word">{LABELS[symbol]}</span>;
 }
 
-function DragonArt({side="left",corner=false}:{side?:"left"|"right";corner?:boolean}) {
-  const file = corner
-    ? (side==="left"?"04_bottom_left_dragon_original_crop.png":"05_bottom_right_dragon_original_crop.png")
-    : (side==="left"?"02_top_left_dragon_original_crop.png":"03_top_right_dragon_original_crop.png");
-  return <img className={"dragon-art "+side+(corner?" corner-art":"")} src={asset("effects/ui-original/"+file)} alt="" draggable="false"/>;
+function DragonArt({side="left"}:{side?:"left"|"right"}) {
+ return <svg className={"dragon-art "+side} viewBox="0 0 150 90" aria-hidden="true">
+  <defs><linearGradient id={"dragon-gold-"+side} x1="0" y1="0" x2="1" y2="1"><stop stopColor="#fff0b2"/><stop offset=".45" stopColor="#e7b45e"/><stop offset="1" stopColor="#a65b35"/></linearGradient></defs>
+  <g fill="none" stroke={"url(#dragon-gold-"+side+")"} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+   <path d="M8 78 Q34 54 38 31 Q43 8 63 15 Q80 20 75 37 Q70 51 53 48 Q42 45 47 34 Q53 24 62 31"/>
+   <path d="M61 15 Q52 2 40 7 L47 20 M66 16 Q78 2 91 8 L79 22 M73 29 Q93 19 106 29 L91 35"/>
+   <path d="M53 48 Q77 58 96 44 Q115 31 139 13 M67 54 Q91 68 116 51 L143 34"/>
+   <path d="M92 43 l9 12 -4 13 M112 33 l13 7 3 13 M37 31 l-14 -8 -8 7"/>
+   <path d="M18 78 Q44 68 63 78 Q91 91 121 72" strokeWidth="2"/>
+   <circle cx="64" cy="30" r="2.5" fill="#fff0b2" stroke="none"/>
+  </g>
+ </svg>;
 }
 
 type ModalKind = "rules"|"paytable"|"history"|null;
@@ -275,8 +282,8 @@ export default function App() {
       {freeMode&&<div className="free-tag">免费旋转剩余：{freeSpins}</div>}
 
       <section className={"reels "+(spinning?"spinning":"")} aria-label="五列二十三张麻将">
-        <div className="dragon-corner tl"><DragonArt side="left" corner/></div>
-        <div className="dragon-corner tr"><DragonArt side="right" corner/></div>
+        <div className="dragon-corner tl"><DragonArt side="left"/></div>
+        <div className="dragon-corner tr"><DragonArt side="right"/></div>
         <div className="dragon-corner bl"><DragonArt side="left" corner/></div>
         <div className="dragon-corner br"><DragonArt side="right" corner/></div>
 

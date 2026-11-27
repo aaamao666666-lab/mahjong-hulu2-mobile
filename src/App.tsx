@@ -14,6 +14,22 @@ const asset = (path:string) => ASSET_BASE + "/" + path;
 const QA_MODE = new URLSearchParams(window.location.search).get("qa") === "1";
 const wait = (ms:number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms));
 
+function createQaGrid():ReelGrid {
+  const symbols:SymbolId[][] = [
+    ["fa","zhong","blueFrame","wan8"],
+    ["bambooRed","singleDots","twoDots","fiveDots","threeDots"],
+    ["fa","zhong","blueFrame","wan8","fiveDots"],
+    ["bambooRed","singleDots","twoDots","threeDots","wild"],
+    ["fa","zhong","blueFrame","wan8"],
+  ];
+  const goldPositions = new Set(["2-0","2-1","2-2","2-3","2-4","3-0","3-1","3-2"]);
+  return symbols.map((reel,column)=>reel.map((symbol,row)=>({
+    id:"qa-"+column+"-"+row,
+    symbol,
+    gold:goldPositions.has(column+"-"+row),
+  })));
+}
+
 const effectAssetStyle:CSSProperties = {
   "--mh-gold-tile-glow": 'url("' + asset("effects/win-free/vfx_08_gold_shards_and_sparkles.png") + '")',
   "--mh-gold-tile-burst": 'url("' + asset("effects/win-free/vfx_07_gold_particle_spark_burst.png") + '")',
@@ -99,7 +115,7 @@ type ModalKind = "rules"|"paytable"|"history"|null;
 type HistoryRecord = {id:number;bet:number;win:number;free:boolean;scatters:number;};
 
 export default function App() {
-  const [grid,setGrid]=useState<ReelGrid>(()=>createGrid());
+  const [grid,setGrid]=useState<ReelGrid>(()=>QA_MODE?createQaGrid():createGrid());
   const [balance,setBalance]=useState(10000);
   const [betLevel,setBetLevel]=useState(2);
   const [win,setWin]=useState(0);
@@ -299,7 +315,7 @@ export default function App() {
             const key=columnIndex+"-"+rowIndex;
             const isWin=highlight.has(key);
             return <button
-              key={tile.id} type="button" className={"tile "+(tile.gold?"gold":"")+(tile.symbol==="wild"?" wild":"")+(tile.symbol==="treasure"?" treasure":"")+(isWin?" winning":"")}
+              key={tile.id} type="button" data-symbol={tile.symbol} className={"tile "+(tile.gold?"gold":"")+(tile.symbol==="wild"?" wild":"")+(tile.symbol==="treasure"?" treasure":"")+(isWin?" winning":"")}
               data-testid="tile" aria-label={LABELS[tile.symbol]+"麻将牌，第"+(columnIndex+1)+"列第"+(rowIndex+1)+"行"}
               onClick={()=>{if(!spinning)openTileInfo(tile.symbol);}}
             >

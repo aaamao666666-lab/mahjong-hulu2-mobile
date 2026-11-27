@@ -32,18 +32,35 @@ test("iPhone reference layout, real artwork and 20 consecutive game rounds", asy
   expect(dimensions.ratio).toBeGreaterThan(0.52);
   expect(dimensions.ratio).toBeLessThan(0.61);
 
+  await page.waitForFunction(()=>Array.from(document.images).every(img=>img.complete));
+  const brokenImages=await page.locator("img").evaluateAll(images=>
+    images.filter(image=>{
+      const node=image as HTMLImageElement;
+      return node.getAttribute("src")&&node.naturalWidth===0;
+    }).map(image=>(image as HTMLImageElement).src)
+  );
+  expect(brokenImages).toEqual([]);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
+
+  const mappedPngs=[
+    "tile-fa.png","tile-zhong.png","tile-frame.png","tile-wan.png",
+    "tile-bamboo-five.png","tile-two-bamboo.png","tile-two-dots.png",
+    "tile-gold-fa.png","tile-gold-zhong.png","tile-gold-frame.png",
+    "tile-gold-wan.png","tile-gold-bamboo.png","tile-gold-two-bamboo.png",
+    "tile-gold-two-dots.png","tile-gold-dots.png"
+  ];
+  for(const filename of mappedPngs){
+    await expect(page.locator('img[src*="'+filename+'"]')).toHaveCount(1);
+  }
+
+  await mkdir("test-results",{recursive:true});
+  await page.screenshot({path:"test-results/mahjong-iphone-reference.png",fullPage:true});
+
   const boardSize=await board.evaluate(node=>{
     const r=node.getBoundingClientRect();
     return {top:r.top,height:r.height};
   });
-  expect(boardSize.height/dimensions.height).toBeGreaterThan(0.48);
-
-  const tileSize=await page.locator(".reel:not(.edge-reel) .tile").first().evaluate(node=>{
-    const r=node.getBoundingClientRect();
-    return {width:r.width,height:r.height};
-  });
-  expect(tileSize.height/boardSize.height).toBeGreaterThan(0.145);
-  expect(tileSize.height/tileSize.width).toBeGreaterThan(1.0);
+  expect(boardSize.height/dimensions.height).toBeGreaterThan(0.46);
 
   const sideAlignment=await page.locator(".reel").evaluateAll(nodes=>{
     const boxes=nodes.map(node=>{

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { BookOpen, History as HistoryIcon, Volume2, VolumeX, X, Zap, UserRound, CircleDollarSign } from "lucide-react";
 import {
   type Tile, type SymbolId, type ReelGrid, type PayingSymbol,
-  ROWS, NORMAL_MULTIPLIERS, FREE_MULTIPLIERS, PAYTABLE,
+  ROWS, NORMAL_MULTIPLIERS, FREE_MULTIPLIERS, PAYTABLE, SCATTER_PAYTABLE,
   createTile, createGrid, createReel, countTreasureSymbols, freeSpinsAwarded,
   getMultiplier, evaluateWays, resolveWinningReels, MAX_CASCADE_ROUNDS,
 } from "./game/engine";
@@ -197,8 +197,8 @@ export default function App() {
       }
 
       for(let cascadeIndex=0;cascadeIndex<MAX_CASCADE_ROUNDS;cascadeIndex++) {
-        const result=evaluateWays(current,bet);
-        if(result.wins.length===0||result.winningPositions.size===0)break;
+        const result=evaluateWays(current,bet,cascadeIndex===0);
+        if(result.wins.length===0)break;
 
         // A base-game spin that triggers Free Spins still uses its base-game multiplier.
         const multiplier=getMultiplier(isFreeSpin,cascadeIndex);
@@ -216,6 +216,7 @@ export default function App() {
         setWinPanel(best?LABELS[best.symbol]+" · "+best.ways+" 路 · ×"+multiplier:"中奖");
         setTip("连锁中奖 +" + amount.toFixed(2));
         setCombo(cascadeIndex);
+        if(result.winningPositions.size===0)break;
         await wait(QA_MODE?18:(turbo?190:460));
 
         setEffect("cascade");
@@ -281,7 +282,7 @@ export default function App() {
     setModal("paytable");
   }
 
-  const isPayingSymbol=(symbol:SymbolId):symbol is PayingSymbol=>symbol!=="treasure";
+  const isPayingSymbol=(symbol:SymbolId):symbol is PayingSymbol=>symbol!=="treasure"&&symbol!=="wild";
   const selectedPay= isPayingSymbol(selectedSymbol)?PAYTABLE[selectedSymbol]:null;
 
   return <main className={"game-shell effect-"+effect} style={effectAssetStyle}>
@@ -400,9 +401,9 @@ export default function App() {
             <thead><tr><th>连续列数</th><th>基础表值</th><th>本注额参考</th></tr></thead>
             <tbody>{([3,4,5] as const).map(count=><tr key={count}>
               <td>{count}列</td><td>{PAYTABLE[selectedSymbol as PayingSymbol][count]}</td>
-              <td>¥{(PAYTABLE[selectedSymbol as PayingSymbol][count]*bet/100).toFixed(2)}</td>
+              <td>¥{(PAYTABLE[selectedSymbol as PayingSymbol][count]*bet).toFixed(2)}</td>
             </tr>)}</tbody>
-          </table>:<p className="paytable-special">胡牌Scatter：3个触发10次免费旋转，每增加1个额外Scatter再增加2次。</p>}
+          </table>:<p className="paytable-special">夺宝符号：3个触发10次免费旋转，每增加1个额外夺宝符号再增加2次。</p>}
           <p className="paytable-note">每个符号的基础表值按连续中奖路数相乘，并应用当前连消倍率。</p>
         </>}
         {modal==="history"&&<>

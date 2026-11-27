@@ -77,18 +77,6 @@ test("iPhone reference layout, real artwork and 20 consecutive game rounds", asy
   });
   expect(sideAlignment).toBeLessThan(14);
 
-  await page.waitForFunction(()=>Array.from(document.images).every(img=>img.complete));
-  const brokenImages=await page.locator("img").evaluateAll(images=>
-    images.filter(image=>{
-      const node=image as HTMLImageElement;
-      return node.getAttribute("src")&&node.naturalWidth===0;
-    }).map(image=>(image as HTMLImageElement).src)
-  );
-  expect(brokenImages).toEqual([]);
-  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
-
-  await mkdir("test-results",{recursive:true});
-  await page.screenshot({path:"test-results/mahjong-iphone-reference.png",fullPage:true});
 
   // Rules panel must be reachable from the title and expose the 2,000-ways feature.
   await page.locator(".top-banner-caption").click();

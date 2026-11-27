@@ -1,1 +1,1 @@
-Re-run npm test and npm build after fixing tile asset references.
+Deploy verified build and filtered Mahjong assets to the configured Workers target.

@@ -236,8 +236,8 @@ button { font:inherit; -webkit-tap-highlight-color:transparent; }
   gap:var(--mh-gap);
 }
 .mh-tile {
-  flex:0 0 calc((100% - (4 * var(--mh-gap))) / 5);
-  height:calc((100% - (4 * var(--mh-gap))) / 5);
+  flex:0 0 calc((100% - var(--mh-gap) - var(--mh-gap) - var(--mh-gap) - var(--mh-gap)) / 5);
+  height:calc((100% - var(--mh-gap) - var(--mh-gap) - var(--mh-gap) - var(--mh-gap)) / 5);
   width:100%; min-width:0; min-height:0; display:flex; align-items:center; justify-content:center;
   overflow:visible; position:relative; background:transparent; border:0; border-radius:0;
 }

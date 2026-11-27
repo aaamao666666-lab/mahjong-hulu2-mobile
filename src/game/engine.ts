@@ -26,15 +26,30 @@ export const PAYTABLE: Record<PayingSymbol, PayoutTable> = {
 };
 
 export type WinLine = {
-  symbol: PayingSymbol; reelCount: 3 | 4 | 5; ways: number;
-  positions: string[]; tableValue: number; amount: number;
+  symbol: PayingSymbol;
+  reelCount: 3 | 4 | 5;
+  ways: number;
+  positions: string[];
+  tableValue: number;
+  amount: number;
 };
-export type WaysResult = { wins: WinLine[]; total: number; winningPositions: Set<string> };
+export type WaysResult = {
+  wins: WinLine[];
+  total: number;
+  winningPositions: Set<string>;
+};
 export type CascadeStep = {
-  grid: ReelGrid; result: WaysResult; multiplier: number; amount: number; nextGrid: ReelGrid;
+  grid: ReelGrid;
+  result: WaysResult;
+  multiplier: number;
+  amount: number;
+  nextGrid: ReelGrid;
 };
 export type CascadeSequence = {
-  steps: CascadeStep[]; finalGrid: ReelGrid; total: number; stoppedBySafetyLimit: boolean;
+  steps: CascadeStep[];
+  finalGrid: ReelGrid;
+  total: number;
+  stoppedBySafetyLimit: boolean;
 };
 
 const PAYING_SYMBOLS = Object.keys(PAYTABLE) as PayingSymbol[];
@@ -49,7 +64,9 @@ export function isGoldEligible(symbol: SymbolId, reelIndex: number): boolean {
 }
 
 export function createTile(
-  reelIndex: number, random: () => number = Math.random, freeSpin = false,
+  reelIndex: number,
+  random: () => number = Math.random,
+  freeSpin = false,
 ): Tile {
   const roll = random();
   let symbol: SymbolId;
@@ -59,16 +76,22 @@ export function createTile(
 
   const eligible = isGoldEligible(symbol, reelIndex);
   const gold = eligible && (freeSpin && reelIndex === 2 ? true : random() < 0.14);
-  return { id: String(++tileSequence), symbol, gold };
+  tileSequence += 1;
+  return { id: String(tileSequence), symbol, gold };
 }
 
 export function createReel(
-  reelIndex: number, random: () => number = Math.random, freeSpin = false,
+  reelIndex: number,
+  random: () => number = Math.random,
+  freeSpin = false,
 ): Tile[] {
   return Array.from({ length: ROWS[reelIndex] }, () => createTile(reelIndex, random, freeSpin));
 }
 
-export function createGrid(random: () => number = Math.random, freeSpin = false): ReelGrid {
+export function createGrid(
+  random: () => number = Math.random,
+  freeSpin = false,
+): ReelGrid {
   return ROWS.map((_, reelIndex) => createReel(reelIndex, random, freeSpin));
 }
 
@@ -94,6 +117,7 @@ export function evaluateWays(grid: ReelGrid, bet: number): WaysResult {
   const wins: WinLine[] = [];
   const winningPositions = new Set<string>();
   let total = 0;
+
   if (!isValidGrid(grid) || !Number.isFinite(bet) || bet < 0) {
     return { wins, total: 0, winningPositions };
   }
@@ -101,14 +125,17 @@ export function evaluateWays(grid: ReelGrid, bet: number): WaysResult {
   for (const symbol of PAYING_SYMBOLS) {
     const matches = grid.map((reel, reelIndex) =>
       reel
-        .map((tile, rowIndex) => ({ tile, key: \`\${reelIndex}-\${rowIndex}\` }))
+        .map((tile, rowIndex) => ({
+          tile,
+          key: String(reelIndex) + "-" + String(rowIndex),
+        }))
         .filter(({ tile }) => symbol === "wild"
           ? tile.symbol === "wild"
           : tile.symbol === symbol || tile.symbol === "wild")
     );
 
     let reelCount = 0;
-    while (reelCount < 5 && matches[reelCount].length > 0) reelCount++;
+    while (reelCount < 5 && matches[reelCount].length > 0) reelCount += 1;
     if (reelCount < 3) continue;
 
     const count = reelCount as 3 | 4 | 5;
@@ -129,17 +156,21 @@ export function evaluateWays(grid: ReelGrid, bet: number): WaysResult {
 }
 
 export function resolveWinningReels(
-  grid: ReelGrid, winningPositions: Set<string>, makeTile: (reelIndex: number) => Tile,
+  grid: ReelGrid,
+  winningPositions: Set<string>,
+  makeTile: (reelIndex: number) => Tile,
 ): ReelGrid {
   return grid.map((reel, reelIndex) => {
     const survivors: Tile[] = [];
     reel.forEach((tile, rowIndex) => {
-      const key = \`\${reelIndex}-\${rowIndex}\`;
-      if (!winningPositions.has(key)) survivors.push(tile);
-      else if (tile.gold && tile.symbol !== "wild" && tile.symbol !== "treasure") {
-        survivors.push({ ...tile, id: \`wild-\${tile.id}\`, symbol: "wild", gold: false });
+      const key = String(reelIndex) + "-" + String(rowIndex);
+      if (!winningPositions.has(key)) {
+        survivors.push(tile);
+      } else if (tile.gold && tile.symbol !== "wild" && tile.symbol !== "treasure") {
+        survivors.push({ ...tile, id: "wild-" + tile.id, symbol: "wild", gold: false });
       }
     });
+
     const missing = reel.length - survivors.length;
     const dropped = Array.from({ length: missing }, () => makeTile(reelIndex));
     return [...dropped, ...survivors];
@@ -147,8 +178,11 @@ export function resolveWinningReels(
 }
 
 export function calculateCascadeSequence(
-  initialGrid: ReelGrid, bet: number, isFreeSpin: boolean,
-  makeTile: (reelIndex: number) => Tile, maxRounds = MAX_CASCADE_ROUNDS,
+  initialGrid: ReelGrid,
+  bet: number,
+  isFreeSpin: boolean,
+  makeTile: (reelIndex: number) => Tile,
+  maxRounds = MAX_CASCADE_ROUNDS,
 ): CascadeSequence {
   let current = initialGrid;
   let total = 0;
@@ -165,7 +199,7 @@ export function calculateCascadeSequence(
     current = nextGrid;
   }
 
-  const stoppedBySafetyLimit = steps.length === maxRounds &&
-    evaluateWays(current, bet).winningPositions.size > 0;
+  const stoppedBySafetyLimit = steps.length === maxRounds
+    && evaluateWays(current, bet).winningPositions.size > 0;
   return { steps, finalGrid: current, total, stoppedBySafetyLimit };
 }

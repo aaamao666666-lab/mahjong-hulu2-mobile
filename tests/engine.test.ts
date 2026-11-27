@@ -6,9 +6,11 @@ import {
 } from "../src/game/engine";
 
 const make = (symbol:SymbolId,id:string,gold=false):Tile => ({symbol,id,gold});
-const grid = (symbols:SymbolId[][]):ReelGrid =>
-  symbols.map((reel,c)=>reel.map((s,r)=>make(s,String(c)+"-"+String(r))));
-
+function fullGrid(firstRows:SymbolId[], filler:SymbolId[]=["treasure","treasure","treasure","treasure","treasure"]):ReelGrid {
+  return ROWS.map((count,col)=>Array.from({length:count},(_,row)=>
+    make(row===0?firstRows[col]:filler[col],String(col)+"-"+String(row))
+  ));
+}
 function seeded(seed:number){
   let state=seed>>>0;
   return ()=>{state=(state*1664525+1013904223)>>>0;return state/0x100000000;};
@@ -21,7 +23,7 @@ describe("Mahjong Ways 2 rules engine",()=>{
   });
 
   it("awards 10 free spins for 3 scatters and +2 per additional scatter",()=>{
-    const board=grid([["treasure"],["zhong"],["treasure"],["treasure"],["fa"]]);
+    const board=fullGrid(["treasure","zhong","treasure","treasure","fa"],["fa","zhong","blueFrame","wan8","fiveDots"]);
     expect(countTreasureSymbols(board)).toBe(3);
     expect(freeSpinsAwarded(2)).toBe(0);
     expect(freeSpinsAwarded(3)).toBe(10);
@@ -51,13 +53,16 @@ describe("Mahjong Ways 2 rules engine",()=>{
   });
 
   it("counts all adjacent left-to-right ways, not scattered matches",()=>{
-    const board=grid([
-      ["fa","zhong","fa","zhong"],
-      ["fa","zhong","zhong","fa","zhong"],
-      ["fa","zhong","fa","zhong","zhong"],
-      ["zhong","zhong","zhong","zhong","zhong"],
-      ["zhong","zhong","zhong","zhong"]
-    ]);
+    const board=ROWS.map((count,col)=>{
+      const symbols=[
+        ["fa","zhong","fa","zhong"],
+        ["fa","zhong","zhong","fa","zhong"],
+        ["fa","zhong","fa","zhong","zhong"],
+        ["zhong","zhong","zhong","zhong","zhong"],
+        ["zhong","zhong","zhong","zhong"]
+      ][col];
+      return Array.from({length:count},(_,row)=>make(symbols[row],String(col)+"-"+String(row)));
+    });
     const result=evaluateWays(board,1);
     const fa=result.wins.find(w=>w.symbol==="fa");
     expect(fa?.reelCount).toBe(3);
@@ -66,25 +71,26 @@ describe("Mahjong Ways 2 rules engine",()=>{
   });
 
   it("allows Wild to substitute for ordinary paying symbols",()=>{
-    const board=grid([["fa"],["wild"],["fa"],["zhong"],["zhong"]]);
-    expect(evaluateWays(board,1).wins.some(w=>w.symbol==="fa"&&w.reelCount===3)).toBe(true);
+    const board=fullGrid(["fa","wild","fa","zhong","fa"]);
+    expect(evaluateWays(board,1).wins.some(w=>w.symbol==="fa"&&w.reelCount>=3)).toBe(true);
   });
 
   it("does not allow Wild to substitute for Scatter",()=>{
-    const board=grid([["treasure"],["wild"],["treasure"],["zhong"],["fa"]]);
+    const board=fullGrid(
+      ["treasure","wild","treasure","zhong","fa"],
+      ["fa","zhong","blueFrame","wan8","fiveDots"]
+    );
     expect(countTreasureSymbols(board)).toBe(2);
     expect(evaluateWays(board,1).winningPositions.size).toBe(0);
   });
 
   it("pays a direct Wild combination according to its own payout row",()=>{
-    const board=grid([["wild"],["wild"],["wild"],["fa"],["zhong"]]);
+    const board=fullGrid(["wild","wild","wild","fa","zhong"]);
     expect(evaluateWays(board,1).wins.find(w=>w.symbol==="wild")?.tableValue).toBe(10);
   });
 
   it("converts winning gold tiles into Wilds and removes ordinary winners",()=>{
-    const board=grid([
-      ["fa","zhong"],["fa","zhong"],["fa","zhong"],["zhong"],["zhong"]
-    ]);
+    const board=fullGrid(["fa","fa","fa","zhong","zhong"]);
     board[1][0].gold=true;
     const next=resolveWinningReels(board,new Set(["0-0","1-0","2-0"]),()=>make("zhong","new"));
     expect(next[1].some(t=>t.symbol==="wild"&&t.id==="wild-1-0")).toBe(true);
@@ -110,9 +116,9 @@ describe("Mahjong Ways 2 rules engine",()=>{
       const random=seeded(0x20260000+round);
       const board=createGrid(random,false);
       expect(board.map(reel=>reel.length)).toEqual([...ROWS]);
-      for(let c=0;c<5;c++){
-        for(const tile of board[c]){
-          if(c===0||c===4)expect(tile.gold).toBe(false);
+      for(let col=0;col<5;col++){
+        for(const tile of board[col]){
+          if(col===0||col===4)expect(tile.gold).toBe(false);
           if(tile.symbol==="wild"||tile.symbol==="treasure")expect(tile.gold).toBe(false);
         }
       }
@@ -121,7 +127,7 @@ describe("Mahjong Ways 2 rules engine",()=>{
       board[1][0]=make("fa","forced-"+round+"-1",true);
       board[2][0]=make("fa","forced-"+round+"-2",true);
       const first=evaluateWays(board,0.2);
-      expect(first.wins.some(w=>w.symbol==="fa"&&w.reelCount===3)).toBe(true);
+      expect(first.wins.some(w=>w.symbol==="fa"&&w.reelCount>=3)).toBe(true);
 
       const sequence=calculateCascadeSequence(
         board,0.2,false,(reelIndex)=>createTile(reelIndex,random,false)

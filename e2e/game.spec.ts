@@ -25,6 +25,10 @@ test("iPhone reference layout, real artwork and 20 consecutive game rounds", asy
   );
   expect(await shape()).toEqual([4,5,5,5,4]);
 
+  // Capture every visual iteration before geometry assertions, including failed iterations.
+  await mkdir("test-results",{recursive:true});
+  await page.screenshot({path:"test-results/mahjong-iphone-reference.png",fullPage:true});
+
   const dimensions=await frame.evaluate(node=>{
     const r=node.getBoundingClientRect();
     return {width:r.width,height:r.height,ratio:r.width/r.height};
@@ -53,8 +57,6 @@ test("iPhone reference layout, real artwork and 20 consecutive game rounds", asy
     await expect(page.locator('img[src*="'+filename+'"]')).toHaveCount(1);
   }
 
-  await mkdir("test-results",{recursive:true});
-  await page.screenshot({path:"test-results/mahjong-iphone-reference.png",fullPage:true});
 
   const boardSize=await board.evaluate(node=>{
     const r=node.getBoundingClientRect();

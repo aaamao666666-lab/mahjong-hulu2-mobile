@@ -1,1 +1,1 @@
-Install filtered Mahjong HULU2 PNG packs; exclude reference sheets and sequences.\n
+Run filtered extraction of all four uploaded PNG packs and verify npm test + npm build.

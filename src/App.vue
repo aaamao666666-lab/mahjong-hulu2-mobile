@@ -11,7 +11,7 @@ const spinning=ref(false),auto=ref(false),sound=ref(true),turbo=ref(false),multi
 const message=ref("金色麻将符号可参与特殊中奖组合");
 const factors=[1,2,3,5],betText=computed(()=>bet.value.toFixed(2));
 const ui=(name:string)=>`./assets/mahjong-hulu2/ui/${name}`;
-const tileSrc=(t:Tile)=>`./mahjong/${t.isGold?"gold":"normal"}/${t.isGold?t.gold:t.normal}`;
+const tileSrc=(t:Tile)=>`./assets/mahjong-hulu2/effects/tiles/${t.isGold?"gold":"normal"}/${t.isGold?t.gold:t.normal}`;
 function spin(){
  if(spinning.value)return;
  if(balance.value<bet.value){message.value="余额不足，请降低投注金额";auto.value=false;return;}

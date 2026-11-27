@@ -138,3 +138,14 @@
 
 
 
+
+
+/* Keep the always-mounted VFX layer out of the five-column CSS grid. */
+.reels>.fx-overlay{
+  position:absolute;
+  inset:0;
+  z-index:5;
+  width:auto;
+  height:auto;
+  pointer-events:none;
+}

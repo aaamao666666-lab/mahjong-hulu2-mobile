@@ -49,7 +49,7 @@ describe("Mahjong Ways 2 rules engine",()=>{
   it("contains the main symbol payout rows",()=>{
     expect(PAYTABLE.wild).toEqual({3:10,4:25,5:50});
     expect(PAYTABLE.zhong).toEqual({3:8,4:20,5:40});
-    expect(PAYTABLE.fa).toEqual({3:6,4:15,5:30});
+    expect(PAYTABLE.fa).toEqual({3:10,4:25,5:50});
   });
 
   it("counts all adjacent left-to-right ways, not scattered matches",()=>{

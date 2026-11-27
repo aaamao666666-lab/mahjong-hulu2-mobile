@@ -15,7 +15,7 @@ export type PayingSymbol = Exclude<SymbolId, "treasure">;
 export const PAYTABLE: Record<PayingSymbol, PayoutTable> = {
   wild:       { 3: 10, 4: 25, 5: 50 },
   zhong:      { 3: 8,  4: 20, 5: 40 },
-  fa:         { 3: 6,  4: 15, 5: 30 },
+  fa:         { 3: 10, 4: 25, 5: 50 },
   blueFrame:  { 3: 6,  4: 15, 5: 30 },
   wan8:       { 3: 5,  4: 10, 5: 15 },
   fiveDots:   { 3: 3,  4: 5,  5: 12 },

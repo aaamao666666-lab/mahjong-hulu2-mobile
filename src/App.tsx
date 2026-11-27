@@ -1,7 +1,7 @@
 import "./game-effects.css";
 import "./design-overrides.css";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { BookOpen, History as HistoryIcon, Volume2, VolumeX, X, Zap } from "lucide-react";
+import { BookOpen, History as HistoryIcon, Volume2, VolumeX, X, Zap, UserRound, CircleDollarSign } from "lucide-react";
 import {
   type Tile, type SymbolId, type ReelGrid, type PayingSymbol,
   ROWS, NORMAL_MULTIPLIERS, FREE_MULTIPLIERS, PAYTABLE,
@@ -77,21 +77,11 @@ function TileFace({symbol,gold=false}:{symbol:SymbolId;gold?:boolean}) {
   return <span className="tile-word">{LABELS[symbol]}</span>;
 }
 
-function DragonArt({side="left"}:{side?:"left"|"right"}) {
-  return <svg className={"dragon-art dragon-art--"+side} viewBox="0 0 180 110" aria-hidden="true">
-    <g fill="none" stroke="#f2c77d" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M8 92Q34 68 40 39Q45 12 69 18Q91 24 83 45Q76 62 58 54Q46 49 54 37Q60 28 70 36"/>
-      <path d="M67 19Q52 2 39 10L48 26M73 20Q91 3 104 13L89 27M85 39Q108 24 125 37L107 46"/>
-      <path d="M58 55Q85 69 108 53Q132 37 166 15M71 65Q99 83 128 63L170 39"/>
-      <path d="M106 51l12 14-5 18M134 37l16 8 3 17M41 39l-17-9-9 9"/>
-      <path d="M20 92Q54 78 76 92Q109 108 149 80" strokeWidth="2"/>
-      <circle cx="70" cy="35" r="2.8" fill="#fff0bb" stroke="none"/>
-    </g>
-    <g fill="none" stroke="#c58b49" strokeWidth="1.4" opacity=".8">
-      <path d="M17 84Q50 70 77 83T143 73M29 70Q56 58 78 70T132 59"/>
-      <path d="M95 23l7-9 9 8M118 30l11-8 11 6"/>
-    </g>
-  </svg>;
+function DragonArt({side="left",corner=false}:{side?:"left"|"right";corner?:boolean}) {
+  const file = corner
+    ? (side==="left"?"04_bottom_left_dragon_original_crop.png":"05_bottom_right_dragon_original_crop.png")
+    : (side==="left"?"02_top_left_dragon_original_crop.png":"03_top_right_dragon_original_crop.png");
+  return <img className={"dragon-art "+side+(corner?" corner-art":"")} src={asset("effects/ui-original/"+file)} alt="" draggable="false"/>;
 }
 
 type ModalKind = "rules"|"paytable"|"history"|null;
@@ -271,7 +261,7 @@ export default function App() {
     <div className="game-frame" data-testid="game-frame" data-round={roundNumber} data-spinning={spinning}>
       <header className="top-banner">
         <DragonArt side="left"/>
-        <div className="top-banner-caption">
+        <div className="top-banner-caption" role="button" tabIndex={0} onClick={()=>setModal("rules")} onKeyDown={event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();setModal("rules");}}}>
           <h1 className="game-title">麻将胡了<span>2</span></h1>
           <small>2000 路中奖组合</small>
         </div>
@@ -285,10 +275,10 @@ export default function App() {
       {freeMode&&<div className="free-tag">免费旋转剩余：{freeSpins}</div>}
 
       <section className={"reels "+(spinning?"spinning":"")} aria-label="五列二十三张麻将">
-        <div className="dragon-corner tl"><DragonArt side="left"/></div>
-        <div className="dragon-corner tr"><DragonArt side="right"/></div>
-        <div className="dragon-corner bl"><DragonArt side="left"/></div>
-        <div className="dragon-corner br"><DragonArt side="right"/></div>
+        <div className="dragon-corner tl"><DragonArt side="left" corner/></div>
+        <div className="dragon-corner tr"><DragonArt side="right" corner/></div>
+        <div className="dragon-corner bl"><DragonArt side="left" corner/></div>
+        <div className="dragon-corner br"><DragonArt side="right" corner/></div>
 
         {grid.map((reel,columnIndex)=><div
           className={"reel "+(rolling[columnIndex]?"rolling":"")+(columnIndex===0||columnIndex===4?" edge-reel":"")}
@@ -318,35 +308,32 @@ export default function App() {
       </div>
 
       <section className="account-row" aria-label="账户信息">
-        <div className="stat-pill asset-stat">
-          <img src={asset("effects/ui-original/25_user_wallet_panel_transparent.png")} alt=""/>
-          <small>余额</small><b>¥{balance.toFixed(2)}</b>
+        <div className="stat-pill">
+          <UserRound aria-hidden="true"/>
+          <b>¥{balance.toFixed(2)}</b>
         </div>
-        <div className="stat-pill pg-pill asset-stat">
-          <img src={asset("effects/ui-original/26_pg_panel_transparent.png")} alt=""/>
-          <b>PG</b>
-        </div>
-        <div className="stat-pill asset-stat">
-          <img src={asset("effects/ui-original/27_balance_panel_transparent.png")} alt=""/>
-          <small>下注金额</small><b>¥{bet.toFixed(2)}</b>
+        <div className="stat-pill pg-pill"><b>PG</b></div>
+        <div className="stat-pill">
+          <b>¥{bet.toFixed(2)}</b>
+          <CircleDollarSign aria-hidden="true"/>
         </div>
       </section>
 
       <section className="controls reference-controls" aria-label="游戏控制">
         <button className={turbo?"selected control-round":"control-round"} type="button" aria-label="加速" onClick={()=>setTurbo(v=>!v)}>
-          <Zap/><small>加速</small>
+          <Zap/>
         </button>
         <button className="asset-control control-round" type="button" aria-label="减注" disabled={spinning||freeMode||betLevel<=1} onClick={()=>changeBet(-1)}>
-          <img src={asset("effects/ui-original/21_minus_button_transparent.png")} alt=""/><small>减注</small>
+          <img src={asset("effects/ui-original/21_minus_button_transparent.png")} alt=""/>
         </button>
         <button className="spin asset-control" type="button" data-testid="spin" aria-label="旋转" disabled={spinning} onClick={()=>void spin()}>
           <img src={asset("effects/ui-original/22_spin_button_transparent.png")} alt=""/>
         </button>
         <button className="asset-control control-round" type="button" aria-label="加注" disabled={spinning||freeMode||betLevel>=10} onClick={()=>changeBet(1)}>
-          <img src={asset("effects/ui-original/23_plus_button_transparent.png")} alt=""/><small>加注</small>
+          <img src={asset("effects/ui-original/23_plus_button_transparent.png")} alt=""/>
         </button>
         <button className={auto?"asset-control control-round selected":"asset-control control-round"} type="button" aria-label="自动" onClick={toggleAuto}>
-          <img src={asset("effects/ui-original/24_auto_button_transparent.png")} alt=""/><small>{auto?"停止":"自动"}</small>
+          <img src={asset("effects/ui-original/24_auto_button_transparent.png")} alt=""/>
         </button>
       </section>
 

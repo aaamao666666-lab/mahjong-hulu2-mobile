@@ -49,7 +49,7 @@ function TileFace({symbol,gold=false}:{symbol:SymbolId;gold?:boolean}){
  const tileName=imageBySymbol[symbol];
  if(tileName){
   const file=gold?({fa:"tile-gold-fa.png",zhong:"tile-gold-zhong.png",blueFrame:"tile-gold-frame.png",wan8:"tile-gold-wan.png",twoDots:"tile-gold-two-dots.png"} as Record<string,string>)[symbol]:({fa:"tile-fa.png",zhong:"tile-zhong.png",blueFrame:"tile-frame.png",wan8:"tile-wan.png",twoDots:"tile-two-dots.png"} as Record<string,string>)[symbol];
-  return <img className="tile-art tile-image" src={asset(`effects/tiles/mahjong/${gold?"gold":"normal"}/${file}`)} alt={LABELS[symbol]}/>;
+  return <img className="tile-art tile-image" src={asset(`effects/tiles/${gold?"gold":"normal"}/${file}`)} alt={LABELS[symbol]}/>;
  }
  const dotSets:Record<string,Array<[number,number,string]>>={
   fiveDots:[[28,28,"#248b52"],[72,28,"#6652ad"],[50,50,"#c33b39"],[28,72,"#248b52"],[72,72,"#6652ad"]],

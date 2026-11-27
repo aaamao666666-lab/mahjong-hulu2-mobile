@@ -33,8 +33,8 @@ test("iPhone reference layout, real artwork and 20 consecutive game rounds", asy
     const r=node.getBoundingClientRect();
     return {width:r.width,height:r.height,ratio:r.width/r.height};
   });
-  expect(dimensions.ratio).toBeGreaterThan(0.47);
-  expect(dimensions.ratio).toBeLessThan(0.54);
+  expect(dimensions.ratio).toBeGreaterThan(0.52);
+  expect(dimensions.ratio).toBeLessThan(0.61);
 
   await page.waitForFunction(()=>Array.from(document.images).every(img=>img.complete));
   const brokenImages=await page.locator("img").evaluateAll(images=>
@@ -74,7 +74,7 @@ test("iPhone reference layout, real artwork and 20 consecutive game rounds", asy
   }));
   expect(boardSize.height/dimensions.height).toBeGreaterThan(0.46);
   expect(tileSize.height/boardSize.height).toBeGreaterThan(0.145);
-  expect(tileSize.height/tileSize.width).toBeGreaterThan(1.0);
+  expect(tileSize.height/tileSize.width).toBeGreaterThan(1.13);
 
   const sideAlignment=await page.locator(".reel").evaluateAll(nodes=>{
     const boxes=nodes.map(node=>{

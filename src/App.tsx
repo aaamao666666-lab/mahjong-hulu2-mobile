@@ -30,18 +30,22 @@ const LABELS:Record<SymbolId,string> = {
   fiveDots:"彩筒", bambooRed:"红绿条", threeDots:"三色筒",
   twoDots:"双色筒", singleDots:"绿条", wild:"百搭", treasure:"胡",
 };
-const IMAGE_FACES:Partial<Record<SymbolId,{normal:string;gold:string}>> = {
+const IMAGE_FACES:Partial<Record<SymbolId,{normal?:string;gold?:string}>> = {
   fa:{normal:"tile-fa.png",gold:"tile-gold-fa.png"},
   zhong:{normal:"tile-zhong.png",gold:"tile-gold-zhong.png"},
   blueFrame:{normal:"tile-frame.png",gold:"tile-gold-frame.png"},
   wan8:{normal:"tile-wan.png",gold:"tile-gold-wan.png"},
+  bambooRed:{normal:"tile-bamboo-five.png",gold:"tile-gold-bamboo.png"},
+  singleDots:{normal:"tile-two-bamboo.png",gold:"tile-gold-two-bamboo.png"},
   twoDots:{normal:"tile-two-dots.png",gold:"tile-gold-two-dots.png"},
+  fiveDots:{gold:"tile-gold-dots.png"},
 };
 
 function TileFace({symbol,gold=false}:{symbol:SymbolId;gold?:boolean}) {
   const image=IMAGE_FACES[symbol];
-  if(image) {
-    return <img className="tile-art tile-image" src={asset("effects/tiles/" + (gold?"gold/":"normal/") + (gold?image.gold:image.normal))} alt={LABELS[symbol]} draggable="false"/>;
+  const imageFile=image?(gold?image.gold:image.normal):undefined;
+  if(imageFile) {
+    return <img className="tile-art tile-image" src={asset("effects/tiles/" + (gold?"gold/":"normal/") + imageFile)} alt={LABELS[symbol]} draggable="false"/>;
   }
 
   if(symbol==="wild") {

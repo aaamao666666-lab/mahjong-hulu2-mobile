@@ -284,8 +284,8 @@ export default function App() {
       <section className={"reels "+(spinning?"spinning":"")} aria-label="五列二十三张麻将">
         <div className="dragon-corner tl"><DragonArt side="left"/></div>
         <div className="dragon-corner tr"><DragonArt side="right"/></div>
-        <div className="dragon-corner bl"><DragonArt side="left" corner/></div>
-        <div className="dragon-corner br"><DragonArt side="right" corner/></div>
+        <div className="dragon-corner bl"><DragonArt side="left"/></div>
+        <div className="dragon-corner br"><DragonArt side="right"/></div>
 
         {grid.map((reel,columnIndex)=><div
           className={"reel "+(rolling[columnIndex]?"rolling":"")+(columnIndex===0||columnIndex===4?" edge-reel":"")}

@@ -1,27 +1,27 @@
 {
-  "name": "mahjong-hulu2-mobile",
-  "private": true,
-  "version": "0.1.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite --host 0.0.0.0",
-    "build": "tsc -b && vite build",
-    "preview": "vite preview --host 0.0.0.0",
-    "test": "vitest run"
+  "name":"mahjong-hulu2-mobile",
+  "private":true,
+  "version":"0.2.0",
+  "type":"module",
+  "scripts":{
+    "dev":"vite --host 0.0.0.0",
+    "build":"tsc -b && vite build",
+    "preview":"vite preview --host 0.0.0.0",
+    "test":"vitest run",
+    "test:e2e":"playwright test"
   },
-  "dependencies": {
-    "@vitejs/plugin-react": "latest",
-    "@vitejs/plugin-vue": "latest",
-    "vite": "latest",
-    "typescript": "latest",
-    "vue": "latest",
-    "react": "latest",
-    "react-dom": "latest",
-    "lucide-react": "latest"
+  "dependencies":{
+    "@vitejs/plugin-react":"latest",
+    "vite":"latest",
+    "typescript":"latest",
+    "react":"latest",
+    "react-dom":"latest",
+    "lucide-react":"latest"
   },
-  "devDependencies": {
-    "@types/react": "latest",
-    "@types/react-dom": "latest",
-    "vitest": "latest"
+  "devDependencies":{
+    "@types/react":"latest",
+    "@types/react-dom":"latest",
+    "@playwright/test":"latest",
+    "vitest":"latest"
   }
 }

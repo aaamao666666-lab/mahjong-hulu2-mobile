@@ -6,16 +6,15 @@ on:
       - feature/mahjong-hulu2-3d-upgrade
     paths:
       - "src/**"
-      - "public/mahjong/**"
-      - "public/assets/mahjong-hulu2/ui/**"
+      - "tests/**"
+      - "e2e/**"
       - "public/assets/mahjong-hulu2/effects/**"
       - "index.html"
       - "package.json"
-      - "package-lock.json"
+      - "playwright.config.ts"
       - "vite.config.ts"
       - "wrangler.jsonc"
       - ".github/workflows/deploy-workers-dev.yml"
-      - "install-assets.trigger"
   workflow_dispatch:
 
 permissions:
@@ -26,7 +25,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
+  build-test-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout feature branch
@@ -39,23 +38,39 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: npm install
-      - name: Verify original Mahjong PNG folders
+      - name: Verify required original Mahjong assets
         shell: bash
         run: |
           set -euo pipefail
           test -d public/assets/mahjong-hulu2/effects/tiles/normal
           test -d public/assets/mahjong-hulu2/effects/tiles/gold
-          test "$(find public/assets/mahjong-hulu2/effects/tiles/normal -maxdepth 1 -type f -name '*.png' | wc -l)" -gt 0
-          test "$(find public/assets/mahjong-hulu2/effects/tiles/gold -maxdepth 1 -type f -name '*.png' | wc -l)" -gt 0
-      - name: Run game engine tests
+          test -d public/assets/mahjong-hulu2/effects/ui-original
+          test -d public/assets/mahjong-hulu2/effects/spin
+          test -d public/assets/mahjong-hulu2/effects/win-free
+          test "$(find public/assets/mahjong-hulu2/effects/tiles/normal -maxdepth 1 -name '*.png' | wc -l)" -ge 7
+          test "$(find public/assets/mahjong-hulu2/effects/tiles/gold -maxdepth 1 -name '*.png' | wc -l)" -ge 7
+          test -s public/assets/mahjong-hulu2/effects/ui-original/07_bottom_red_button_bar_original.png
+      - name: Run 20-case deterministic gameplay tests
         run: npm test
-      - name: Build production bundle
+      - name: Build production frontend
         run: npm run build
-      - name: Verify build output
-        run: test -s dist/index.html && test -d dist/assets
-      - name: Deploy to this project's workers.dev
+      - name: Verify production output
+        run: test -s dist/index.html && test -s dist/assets
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run iPhone layout and 20-round browser test
+        run: npm run test:e2e
+      - name: Upload iPhone screenshot evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mahjong-hulu2-iphone-visual-test
+          path: test-results/mahjong-iphone-reference.png
+          if-no-files-found: ignore
+          retention-days: 7
+      - name: Deploy verified build to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          apiToken: \${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: \${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy --config wrangler.jsonc

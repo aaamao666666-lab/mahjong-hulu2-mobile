@@ -42,7 +42,15 @@ function makeGrid():ReelGrid{return ROWS.map((n,c)=>Array.from({length:n},()=>ma
 const wait=(ms:number)=>new Promise(resolve=>window.setTimeout(resolve,ms));
 
 
-function TileFace({symbol}:{symbol:SymbolId}){
+function TileFace({symbol,gold=false}:{symbol:SymbolId;gold?:boolean}){
+ const imageBySymbol:Partial<Record<SymbolId,string>>={
+  fa:"fa",zhong:"zhong",blueFrame:"frame",wan8:"wan",twoDots:"two-dots"
+ };
+ const tileName=imageBySymbol[symbol];
+ if(tileName){
+  const file=gold?({fa:"tile-gold-fa.png",zhong:"tile-gold-zhong.png",blueFrame:"tile-gold-frame.png",wan8:"tile-gold-wan.png",twoDots:"tile-gold-two-dots.png"} as Record<string,string>)[symbol]:({fa:"tile-fa.png",zhong:"tile-zhong.png",blueFrame:"tile-frame.png",wan8:"tile-wan.png",twoDots:"tile-two-dots.png"} as Record<string,string>)[symbol];
+  return <img className="tile-art tile-image" src={asset(`effects/tiles/mahjong/${gold?"gold":"normal"}/${file}`)} alt={LABELS[symbol]}/>;
+ }
  const dotSets:Record<string,Array<[number,number,string]>>={
   fiveDots:[[28,28,"#248b52"],[72,28,"#6652ad"],[50,50,"#c33b39"],[28,72,"#248b52"],[72,72,"#6652ad"]],
   threeDots:[[50,25,"#6652ad"],[50,50,"#c33b39"],[50,75,"#248b52"]],
@@ -167,7 +175,7 @@ export default function App(){
    <div className="dragon-corner br"><img src={asset("ui/05_bottom_right_dragon_original_crop.png")} alt="" /></div>
    {grid.map((reel,c)=><div className={`reel ${rolling[c]?"rolling":""}`} key={c}>{reel.map((tile,r)=>{
     const key=`${c}-${r}`;const isWin=highlight.has(key);
-    return <div key={tile.id} role="button" tabIndex={spinning?-1:0} title="点击查看该麻将赔率" onClick={()=>{if(!spinning)setPaytableSymbol(tile.symbol);}} onKeyDown={event=>{if(!spinning&&(event.key==="Enter"||event.key===" ")){event.preventDefault();setPaytableSymbol(tile.symbol);}}} className={`tile ${tile.gold?"gold":""} ${tile.symbol==="wild"?"wild":""} ${tile.symbol==="treasure"?"treasure":""} ${isWin?"winning":""}`}><TileFace symbol={tile.symbol}/>{tile.gold&&<i>金</i>}</div>;
+    return <div key={tile.id} role="button" tabIndex={spinning?-1:0} title="点击查看该麻将赔率" onClick={()=>{if(!spinning)setPaytableSymbol(tile.symbol);}} onKeyDown={event=>{if(!spinning&&(event.key==="Enter"||event.key===" ")){event.preventDefault();setPaytableSymbol(tile.symbol);}}} className={`tile ${tile.gold?"gold":""} ${tile.symbol==="wild"?"wild":""} ${tile.symbol==="treasure"?"treasure":""} ${isWin?"winning":""}`}><TileFace symbol={tile.symbol} gold={tile.gold}/>{tile.gold&&<i>金</i>}</div>;
   })}</div>)}
   <div className={`fx-overlay fx-${effect}`} aria-hidden="true" />
   {panel&&<div className="win-panel">{panel}<strong>¥{win.toFixed(2)}</strong></div>}</section>

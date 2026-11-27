@@ -1,1 +1,1 @@
-Re-run build and test after fixing BASE_URL-aware image references.
+Install filtered Mahjong HULU2 PNG packs; exclude reference sheets and sequences.\n

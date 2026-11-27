@@ -112,7 +112,7 @@ export default function App() {
   const [freeMode,setFreeMode]=useState(false);
   const [combo,setCombo]=useState(0);
   const [highlight,setHighlight]=useState<Set<string>>(new Set());
-  const [tip,setTip]=useState("金色麻将符号中奖后将转化为百搭");
+  const [tip,setTip]=useState("保证出现的金色麻将符号！");
   const [effect,setEffect]=useState<"none"|"win"|"gold-win"|"cascade">("none");
   const [winPanel,setWinPanel]=useState("");
   const [modal,setModal]=useState<ModalKind>(null);

@@ -55,6 +55,17 @@ jobs:
           if kept < 70:
               raise SystemExit("PNG count lower than expected; refusing to commit")
           PY
+      - name: Commit extracted PNG assets
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/assets/mahjong-hulu2/effects
+          if git diff --cached --quiet; then
+            echo "No new asset files to commit"
+          else
+            git commit -m "Add filtered individual Mahjong PNG assets"
+            git push origin HEAD:feature/mahjong-hulu2-3d-upgrade
+          fi
       - name: Build and test
         run: |
           npm install

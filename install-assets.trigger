@@ -1,1 +1,1 @@
-Extract filtered independent PNGs, run tests/build, then commit assets to feature branch.
+Re-run npm test and npm build after fixing tile asset references.

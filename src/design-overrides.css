@@ -136,9 +136,12 @@
 
 
 
-/* === Reference alignment iteration 3: original table background, no checkerboard composites ===
-   Presentation-only. All game state, scoring, RNG, event handlers and API remain untouched. */
+
+
+/* === Reference alignment iteration 4: allocate vertical space to the 5-reel tile board ===
+   Visual-only sizing. Game logic, handlers, API and state are unchanged. */
 .game-frame{
+  height:min(90dvh,166vw);
   background-image:url("/assets/mahjong-hulu2/effects/ui-original/00_full_game_background_received.png");
   background-position:center;
   background-size:100% 100%;
@@ -149,30 +152,26 @@
 }
 .game-frame:before,.game-frame:after{display:none !important;}
 .top-banner{
-  position:relative !important;
   display:flex !important;
-  flex:0 0 10.5% !important;
+  flex:0 0 6% !important;
   min-height:0 !important;
-  height:auto;
-  width:auto;
-  opacity:1;
   padding:0 8%;
   background:transparent;
   border:0;
   box-shadow:none;
 }
-.top-banner-caption h1{display:none !important;}
+.top-banner-caption h1,
+.top-banner>.dragon-art{display:none !important;}
 .top-banner-caption small{
   display:block;
   color:#b85d39;
-  font-size:clamp(14px,4.1vw,20px);
+  font-size:clamp(13px,3.8vw,19px);
   font-weight:1000;
-  letter-spacing:.14em;
+  letter-spacing:.12em;
   text-shadow:0 1px 0 #ffe3a5,0 2px 2px #7d432b55;
 }
-.top-banner>.dragon-art{display:none !important;}
 .multiplier{
-  flex:0 0 10.5% !important;
+  flex:0 0 6% !important;
   min-height:0 !important;
   margin:0;
   background:transparent;
@@ -187,50 +186,33 @@
   box-shadow:none !important;
   padding:0 5.5%;
 }
-.reels:before,.reels:after{display:none !important;}
-.dragon-corner{display:none !important;}
+.reels:before,.reels:after,.dragon-corner{display:none !important;}
 .tile-image{
-  position:absolute;
-  left:50%;
-  top:50%;
-  width:204%;
-  height:160%;
-  max-width:none;
-  max-height:none;
-  object-fit:fill;
-  transform:translate(-50%,-50%);
+  position:absolute;left:50%;top:50%;
+  width:204%;height:160%;max-width:none;max-height:none;
+  object-fit:fill;transform:translate(-50%,-50%);
 }
 .notice{
-  flex:0 0 7.5% !important;
-  min-height:44px !important;
-  background:transparent;
-  border:0;
-  box-shadow:none;
-  padding:0 7%;
+  flex:0 0 7% !important;
+  min-height:40px !important;
+  background:transparent;border:0;box-shadow:none;padding:0 7%;
 }
 .notice img{display:none !important;}
 .notice span{font-size:clamp(12px,3.5vw,17px);}
 .account-row{
-  flex:0 0 6.5% !important;
-  min-height:38px !important;
-  background:transparent;
+  flex:0 0 7% !important;min-height:38px !important;background:transparent;
 }
 .controls.reference-controls{
-  flex:0 0 13% !important;
-  min-height:76px !important;
-  background:transparent;
-  border:0;
-  padding-top:2px;
-  padding-bottom:3px;
+  flex:0 0 14% !important;min-height:72px !important;
+  background:transparent;border:0;padding-top:2px;padding-bottom:3px;
 }
 .sound-strip{
-  flex:0 0 3.5% !important;
-  min-height:20px !important;
-  background:transparent;
+  flex:0 0 3% !important;min-height:18px !important;background:transparent;
 }
 @media(max-height:740px){
   .top-banner,.multiplier{min-height:0 !important;}
-  .notice{min-height:38px !important;}
-  .controls.reference-controls{min-height:64px !important;}
-  .sound-strip{min-height:18px !important;}
+  .notice{min-height:34px !important;}
+  .account-row{min-height:34px !important;}
+  .controls.reference-controls{min-height:62px !important;}
+  .sound-strip{min-height:16px !important;}
 }

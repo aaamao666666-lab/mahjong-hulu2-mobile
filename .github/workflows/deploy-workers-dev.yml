@@ -15,6 +15,7 @@ on:
       - "vite.config.ts"
       - "wrangler.jsonc"
       - ".github/workflows/deploy-workers-dev.yml"
+      - "install-assets.trigger"
   workflow_dispatch:
 
 permissions:

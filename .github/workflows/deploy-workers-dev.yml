@@ -42,10 +42,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test -d public/mahjong/normal
-          test -d public/mahjong/gold
-          test "$(find public/mahjong/normal -maxdepth 1 -type f -name '*.png' | wc -l)" -gt 0
-          test "$(find public/mahjong/gold -maxdepth 1 -type f -name '*.png' | wc -l)" -gt 0
+          test -d public/assets/mahjong-hulu2/effects/tiles/normal
+          test -d public/assets/mahjong-hulu2/effects/tiles/gold
+          test "$(find public/assets/mahjong-hulu2/effects/tiles/normal -maxdepth 1 -type f -name '*.png' | wc -l)" -gt 0
+          test "$(find public/assets/mahjong-hulu2/effects/tiles/gold -maxdepth 1 -type f -name '*.png' | wc -l)" -gt 0
       - name: Run game engine tests
         run: npm test
       - name: Build production bundle
